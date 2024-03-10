@@ -23,12 +23,15 @@ class _MyBarGraphState extends State<MyBarGraph> {
   List<IndividualBar> barData = [];
   late final ScrollController _scrollController;
 
-  void initializeBarData() => {
-        barData = List.generate(
-          widget.monthlySummary.length,
-          (index) => IndividualBar(x: index, y: widget.monthlySummary[index]),
-        ),
-      };
+  void initializeBarData() {
+    barData = List.generate(
+      widget.monthlySummary.length,
+      (index) => IndividualBar(
+        x: (widget.startMonth + index) - 1,
+        y: widget.monthlySummary[index],
+      ),
+    );
+  }
 
   double calculateMax() {
     double max = 500;
