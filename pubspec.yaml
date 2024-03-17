@@ -48,3 +48,14 @@ flutter:
 
   assets:
     - assets/
+# Splash
+flutter_native_splash:
+  color: "#000000"
+  android: true
+  ios: true
+  image: assets/splash.png
+  android_12:
+    color: "#000000"
+    image: assets/splash.png
+
+  
