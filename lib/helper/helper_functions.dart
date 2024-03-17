@@ -5,6 +5,12 @@ double convertToDouble(String value) => double.tryParse(value) ?? 0;
 String formatAmount(double value) =>
     NumberFormat.currency(locale: "pt_BR", symbol: "\$", decimalDigits: 2).format(value);
 
+String formatDate(DateTime date) {
+  var format = DateFormat('dd/MM/yyyy');
+
+  return format.format(date);
+}
+
 int calculateMonthCount(startYear, startMonth, currentYear, currentMonth) =>
     (currentYear - startYear) * 12 + currentMonth - startMonth + 1;
 
