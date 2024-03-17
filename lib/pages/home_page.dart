@@ -1,11 +1,11 @@
 import 'package:expense_app/barGraph/my_bar_graph.dart';
 import 'package:expense_app/components/my_list_tile.dart';
-import 'package:expense_app/database/expense_database.dart';
+import 'package:expense_app/components/no_expense.dart';
 import 'package:expense_app/helper/helper_functions.dart';
 import 'package:expense_app/models/expense.dart';
+import 'package:expense_app/pages/home_controller.dart';
 import 'package:expense_app/utils/my_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,17 +18,16 @@ class _HomePageState extends State<HomePage> {
   late TextEditingController nameController;
   late TextEditingController amountController;
 
-  // futures to load graph data & monthly total
-  Future<Map<String, double>>? _monthlyTotalsFuture;
-  Future<double>? _calculateCurrentMonthTotal;
+  late HomeController _homeController;
 
   @override
   void initState() {
     nameController = TextEditingController();
     amountController = TextEditingController();
 
-    getAllExpenses();
-    refreshData();
+    _homeController = HomeController();
+    _homeController.getAllExpenses();
+    _homeController.addListener(() => setState(() {}));
 
     super.initState();
   }
@@ -39,24 +38,6 @@ class _HomePageState extends State<HomePage> {
     amountController.dispose();
     super.dispose();
   }
-
-  void getAllExpenses() => {
-        Provider.of<ExpenseDatabase>(
-          context,
-          listen: false,
-        ).getAllExpenses(),
-      };
-
-  void refreshData() => {
-        _monthlyTotalsFuture = Provider.of<ExpenseDatabase>(
-          context,
-          listen: false,
-        ).calculateMonthlyTotals(),
-        _calculateCurrentMonthTotal = Provider.of<ExpenseDatabase>(
-          context,
-          listen: false,
-        ).calculateCurrentMonthExpenses(),
-      };
 
   void createExpense() {
     showDialog(
@@ -99,9 +80,7 @@ class _HomePageState extends State<HomePage> {
                   date: DateTime.now(),
                 );
 
-                context.read<ExpenseDatabase>().createExpense(expense);
-
-                refreshData();
+                _homeController.addExpense(expense);
 
                 nameController.clear();
                 amountController.clear();
@@ -159,9 +138,7 @@ class _HomePageState extends State<HomePage> {
 
                 int oldId = expense.id;
 
-                context.read<ExpenseDatabase>().updateExpense(id: oldId, expense: newExpense);
-
-                refreshData();
+                _homeController.editExpense(id: oldId, expense: newExpense);
 
                 nameController.clear();
                 amountController.clear();
@@ -197,9 +174,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.pop(context);
 
-              context.read<ExpenseDatabase>().deleteExpense(id: id);
-
-              refreshData();
+              _homeController.deleteExpense(id);
             },
           )
         ],
@@ -208,107 +183,80 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer<ExpenseDatabase>(builder: (_, value, __) {
-      // get dates
-      int startMonth = value.getStartMonth();
-      int startYear = value.getStartYear();
-      int currentMonth = DateTime.now().month;
-      int currentYear = DateTime.now().year;
-
-      // calculate the number of months since the first month
-      int mountCont = calculateMonthCount(startYear, startMonth, currentYear, currentMonth);
-
-      // only display the expense for the current month
-      List<Expense> currentMonthExpenses = value.allExpense
-          .where((expense) => expense.date.year == currentYear && expense.date.month == currentMonth)
-          .toList();
-
-      return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: FutureBuilder(
-            future: _calculateCurrentMonthTotal,
-            builder: ((context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text('\$${snapshot.data!.toStringAsFixed(2)}'),
-                    Text(getCurrentMonth()),
-                  ],
-                );
-              } else {
-                return const Text('Loading...');
-              }
-            }),
-          ),
+              future: _homeController.calculateCurrentMonthExpenses(),
+              builder: (_, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('\$${snapshot.data!.toStringAsFixed(2)}'),
+                      Text(getCurrentMonth()),
+                    ],
+                  );
+                } else {
+                  return const Text('Loading...');
+                }
+              }),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: createExpense,
           child: const Icon(MyIcons.add),
         ),
         body: SafeArea(
-          child: Column(
+          child: Stack(
             children: <Widget>[
-              // GRAPH BAR
-              SizedBox(
-                height: 250,
-                child: FutureBuilder(
-                  future: _monthlyTotalsFuture,
-                  builder: (_, snapshot) {
-                    // data is load
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      Map<String, dynamic> monthlyTotals = snapshot.data ?? {};
+              Column(
+                children: <Widget>[
+                  // GRAPH BAR
+                  SizedBox(
+                    height: 250,
+                    child: FutureBuilder(
+                      future: _homeController.monthlySummary(),
+                      builder: (_, snapshot) {
+                        // data is load
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return MyBarGraph(
+                            monthlySummary: snapshot.data ?? [],
+                            startMonth: _homeController.startMonth,
+                          );
+                        }
+                        // loading...
+                        else {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+                      },
+                    ),
+                  ),
 
-                      // create the list monthly summary
-                      List<double> monthlySummary = List.generate(
-                        mountCont,
-                        (index) {
-                          int year = startYear + (startMonth + index - 1) ~/ 12;
-                          int month = (startMonth + index - 1) % 12 + 1;
+                  const SizedBox(height: 25),
 
-                          String yearMonthKey = '$year-$month';
+                  // EXPENSE LIST
+                  Expanded(
+                    child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: _homeController.currentMonthExpenses.length,
+                      itemBuilder: (_, index) {
+                        var reversedIndex = _homeController.currentMonthExpenses.length - index - 1;
+                        var expense = _homeController.currentMonthExpenses[reversedIndex];
 
-                          return monthlyTotals[yearMonthKey] ?? 0.0;
-                        },
-                      );
-
-                      return MyBarGraph(monthlySummary: monthlySummary, startMonth: startMonth);
-                    }
-                    // loading...
-                    else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  },
-                ),
+                        return MyListTile(
+                          expense: expense,
+                          onEditPressed: (context) => editExpense(expense),
+                          onDeletePressed: (context) => deleteExpense(expense.id),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-
-              const SizedBox(height: 25),
-
-              // EXPENSE LIST
-              Expanded(
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: currentMonthExpenses.length,
-                  itemBuilder: (_, index) {
-                    var reversedIndex = currentMonthExpenses.length - index - 1;
-                    var expense = currentMonthExpenses[reversedIndex];
-
-                    return MyListTile(
-                      title: expense.name,
-                      trailing: formatAmount(expense.amount),
-                      onEditPressed: (context) => editExpense(expense),
-                      onDeletePressed: (context) => deleteExpense(expense.id),
-                    );
-                  },
-                ),
-              ),
+              NoExpense(visible: _homeController.currentMonthExpenses.isEmpty)
             ],
           ),
         ),
       );
-    });
-  }
 }
 
 class _Button extends StatelessWidget {
