@@ -99,7 +99,7 @@ class _MyBarGraphState extends State<MyBarGraph> {
                         axisSide: meta.axisSide,
                         child: Text(
                           text,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: Constants.defaultFontSize,
                             fontWeight: FontWeight.bold,
                             color: MyColors.base300,
@@ -115,7 +115,7 @@ class _MyBarGraphState extends State<MyBarGraph> {
                   .map(
                     (data) => BarChartGroupData(
                       x: data.x,
-                      barRods: [
+                      barRods: <BarChartRodData>[
                         BarChartRodData(
                           toY: data.y,
                           width: barWidth,
@@ -133,6 +133,21 @@ class _MyBarGraphState extends State<MyBarGraph> {
                   .toList(),
               alignment: BarChartAlignment.center,
               groupsSpace: spaceBetweenBars,
+              barTouchData: BarTouchData(
+                touchTooltipData: BarTouchTooltipData(
+                  tooltipBgColor: MyColors.base300Shade800,
+                  tooltipHorizontalAlignment: FLHorizontalAlignment.right,
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    return BarTooltipItem(
+                      '${rod.toY}',
+                      const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
         ),
