@@ -12,6 +12,12 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.6
+
+  # Dependency injection
+  get_it: ^7.6.7
+
+  # Routes
+  go_router: ^13.2.1
   
   # Isar
   isar: ^3.1.0+1
@@ -29,11 +35,16 @@ dependencies:
 
   # BarGraph
   fl_chart: ^0.66.2
+
+  # Fonts
   google_fonts: ^6.2.1
 
   # Spash - Icon
   flutter_native_splash: ^2.4.0
   flutter_launcher_icons: ^0.13.1
+
+  # Preferences
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
@@ -48,6 +59,7 @@ flutter:
 
   assets:
     - assets/
+    
 # Splash
 flutter_native_splash:
   color: "#000000"
