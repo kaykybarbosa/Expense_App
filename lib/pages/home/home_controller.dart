@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:expense_app/database/expense_database.dart';
+import 'package:expense_app/domain/models/expense.dart';
 import 'package:expense_app/helper/helper_functions.dart';
-import 'package:expense_app/models/expense.dart';
 import 'package:flutter/material.dart';
 
 class HomeController extends ChangeNotifier {

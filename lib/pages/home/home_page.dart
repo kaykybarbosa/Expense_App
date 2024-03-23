@@ -1,9 +1,14 @@
-import 'package:expense_app/barGraph/my_bar_graph.dart';
+import 'package:expense_app/components/barGraph/my_bar_graph.dart';
+import 'package:expense_app/components/custom_button.dart';
+import 'package:expense_app/components/custom_text_field.dart';
 import 'package:expense_app/components/my_list_tile.dart';
 import 'package:expense_app/components/no_expense.dart';
+import 'package:expense_app/dependency_injection/app_component.dart';
+import 'package:expense_app/domain/models/expense.dart';
 import 'package:expense_app/helper/helper_functions.dart';
-import 'package:expense_app/models/expense.dart';
-import 'package:expense_app/pages/home_controller.dart';
+import 'package:expense_app/pages/home/home_controller.dart';
+import 'package:expense_app/pages/home/widgets/custom_appbar.dart';
+import 'package:expense_app/pages/home/widgets/custom_drawer.dart';
 import 'package:expense_app/utils/my_icons.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +30,7 @@ class _HomePageState extends State<HomePage> {
     nameController = TextEditingController();
     amountController = TextEditingController();
 
-    _homeController = HomeController();
+    _homeController = getIt<HomeController>();
     _homeController.getAllExpenses();
     _homeController.addListener(() => setState(() {}));
 
@@ -39,6 +44,13 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  void _cancelButton() {
+    Navigator.pop(context);
+
+    nameController.clear();
+    amountController.clear();
+  }
+
   void createExpense() {
     showDialog(
       context: context,
@@ -47,28 +59,24 @@ class _HomePageState extends State<HomePage> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            TextField(
+            CustomTextField(
+              label: 'Name',
+              isRequiredFocus: true,
               controller: nameController,
-              decoration: const InputDecoration(label: Text('Name')),
             ),
-            TextField(
+            CustomTextField(
+              label: 'Amount',
               controller: amountController,
-              decoration: const InputDecoration(label: Text('Amount')),
-              keyboardType: TextInputType.number,
+              keyboardType: const TextInputType.numberWithOptions(),
             ),
           ],
         ),
         actions: <Widget>[
-          _Button(
+          CustomButton(
             label: 'Cancel',
-            onPressed: () {
-              Navigator.pop(context);
-
-              nameController.clear();
-              amountController.clear();
-            },
+            onPressed: () => _cancelButton(),
           ),
-          _Button(
+          CustomButton(
             label: 'Save',
             onPressed: () {
               if (nameController.text.isNotEmpty && amountController.text.isNotEmpty) {
@@ -103,28 +111,23 @@ class _HomePageState extends State<HomePage> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            TextField(
+            CustomTextField(
+              label: 'Name',
               controller: nameController,
-              decoration: const InputDecoration(label: Text('Name')),
             ),
-            TextField(
+            CustomTextField(
+              label: 'Amount',
               controller: amountController,
-              decoration: const InputDecoration(label: Text('Amount')),
-              keyboardType: TextInputType.number,
+              keyboardType: const TextInputType.numberWithOptions(),
             ),
           ],
         ),
         actions: <Widget>[
-          _Button(
+          CustomButton(
             label: 'Cancel',
-            onPressed: () {
-              Navigator.pop(context);
-
-              nameController.clear();
-              amountController.clear();
-            },
+            onPressed: () => _cancelButton(),
           ),
-          _Button(
+          CustomButton(
             label: 'Save',
             onPressed: () {
               if (nameController.text.isNotEmpty || amountController.text.isNotEmpty) {
@@ -160,16 +163,12 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[],
         ),
         actions: [
-          _Button(
+          CustomButton(
             label: 'Cancel',
-            onPressed: () {
-              Navigator.pop(context);
-
-              nameController.clear();
-              amountController.clear();
-            },
+            onPressed: () => _cancelButton(),
           ),
-          _Button(
+          CustomButton(
+            isDanger: true,
             label: 'Delete',
             onPressed: () {
               Navigator.pop(context);
@@ -184,23 +183,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: FutureBuilder(
-              future: _homeController.calculateCurrentMonthExpenses(),
-              builder: (_, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text('\$${snapshot.data!.toStringAsFixed(2)}'),
-                      Text(getCurrentMonth()),
-                    ],
-                  );
-                } else {
-                  return const Text('Loading...');
-                }
-              }),
-        ),
+        drawer: const CustomDrawer(),
+        appBar: CustomAppBar(future: _homeController.calculateCurrentMonthExpenses()),
         floatingActionButton: FloatingActionButton(
           onPressed: createExpense,
           child: const Icon(MyIcons.add),
@@ -256,18 +240,5 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-      );
-}
-
-class _Button extends StatelessWidget {
-  const _Button({required this.label, required this.onPressed});
-
-  final Function onPressed;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) => MaterialButton(
-        onPressed: () => onPressed(),
-        child: Text(label),
       );
 }
