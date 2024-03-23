@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:expense_app/models/expense.dart';
+import 'package:expense_app/domain/models/expense.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -16,7 +16,10 @@ class ExpenseDatabase {
   // initialize database
   static Future<void> initialize() async {
     final dir = await getApplicationDocumentsDirectory();
-    isar = await Isar.open([ExpenseSchema], directory: dir.path);
+    isar = await Isar.open(
+      [ExpenseSchema],
+      directory: dir.path,
+    );
   }
 
   /*
