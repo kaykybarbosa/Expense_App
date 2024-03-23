@@ -1,15 +1,16 @@
-import 'package:expense_app/app/app_theme.dart';
-import 'package:expense_app/pages/home_page.dart';
+import 'package:expense_app/app/routes/app_pages.dart';
+import 'package:expense_app/app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class ExpenseApp extends StatelessWidget {
   const ExpenseApp({super.key});
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
+  Widget build(BuildContext context) => MaterialApp.router(
         title: 'Expense App',
-        theme: AppTheme.light(context),
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
         debugShowCheckedModeBanner: false,
-        home: const HomePage(),
+        routerConfig: AppPages.pages,
       );
 }
