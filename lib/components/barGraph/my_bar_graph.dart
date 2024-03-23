@@ -1,7 +1,6 @@
-import 'package:expense_app/barGraph/individual_bar.dart';
+import 'package:expense_app/components/barGraph/individual_bar.dart';
 import 'package:expense_app/helper/helper_functions.dart';
 import 'package:expense_app/utils/constants.dart';
-import 'package:expense_app/utils/my_colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -99,10 +98,10 @@ class _MyBarGraphState extends State<MyBarGraph> {
                         axisSide: meta.axisSide,
                         child: Text(
                           text,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: Constants.defaultFontSize,
                             fontWeight: FontWeight.bold,
-                            color: MyColors.base300,
+                            color: Theme.of(context).colorScheme.onSecondaryContainer,
                           ),
                         ),
                       );
@@ -119,12 +118,12 @@ class _MyBarGraphState extends State<MyBarGraph> {
                         BarChartRodData(
                           toY: data.y,
                           width: barWidth,
-                          borderRadius: BorderRadius.circular(5),
-                          color: MyColors.base300Shade800,
+                          borderRadius: BorderRadius.circular(Constants.borderRadius),
+                          color: Theme.of(context).colorScheme.secondaryContainer,
                           backDrawRodData: BackgroundBarChartRodData(
                             show: true,
                             toY: calculateMax(),
-                            color: MyColors.base100,
+                            color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         )
                       ],
@@ -135,13 +134,13 @@ class _MyBarGraphState extends State<MyBarGraph> {
               groupsSpace: spaceBetweenBars,
               barTouchData: BarTouchData(
                 touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: MyColors.base300Shade800,
+                  tooltipBgColor: Theme.of(context).colorScheme.secondaryContainer,
                   tooltipHorizontalAlignment: FLHorizontalAlignment.right,
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     return BarTooltipItem(
                       '${rod.toY}',
-                      const TextStyle(
-                        color: Colors.white,
+                      TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.w600,
                       ),
                     );
