@@ -1,6 +1,7 @@
+import 'dart:developer';
+
 import 'package:expense_app/components/barGraph/my_bar_graph.dart';
 import 'package:expense_app/components/custom_button.dart';
-import 'package:expense_app/components/custom_text_field.dart';
 import 'package:expense_app/components/my_list_tile.dart';
 import 'package:expense_app/components/no_expense.dart';
 import 'package:expense_app/dependency_injection/app_component.dart';
@@ -9,6 +10,7 @@ import 'package:expense_app/helper/helper_functions.dart';
 import 'package:expense_app/pages/home/home_controller.dart';
 import 'package:expense_app/pages/home/widgets/custom_appbar.dart';
 import 'package:expense_app/pages/home/widgets/custom_drawer.dart';
+import 'package:expense_app/pages/home/widgets/custom_show_modal_bottom_sheet.dart';
 import 'package:expense_app/utils/my_icons.dart';
 import 'package:flutter/material.dart';
 
@@ -56,51 +58,29 @@ class _HomePageState extends State<HomePage> {
   }
 
   void createExpense() {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('New Expense'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            CustomTextField(
-              label: 'Name',
-              isRequiredFocus: true,
-              controller: nameController,
-            ),
-            CustomTextField(
-              label: 'Amount',
-              controller: amountController,
-              keyboardType: const TextInputType.numberWithOptions(),
-            ),
-          ],
-        ),
-        actions: <Widget>[
-          CustomButton(
-            label: 'Cancel',
-            onPressed: () => _cancelButton(),
-          ),
-          CustomButton(
-            label: 'Save',
-            onPressed: () {
-              if (nameController.text.isNotEmpty && amountController.text.isNotEmpty) {
-                Navigator.pop(context);
+    nameController.clear();
+    amountController.clear();
 
-                Expense expense = Expense(
-                  name: nameController.text,
-                  amount: convertToDouble(amountController.text),
-                  date: DateTime.now(),
-                );
+    customShowModalButtomSheet(
+      context,
+      nameController: nameController,
+      amountController: amountController,
+      onPressed: () {
+        if (nameController.text.isNotEmpty && amountController.text.isNotEmpty) {
+          Navigator.pop(context);
 
-                _homeController.addExpense(expense);
+          Expense expense = Expense(
+            name: nameController.text,
+            amount: convertToDouble(amountController.text),
+            date: DateTime.now(),
+          );
 
-                nameController.clear();
-                amountController.clear();
-              }
-            },
-          )
-        ],
-      ),
+          _homeController.addExpense(expense);
+
+          nameController.clear();
+          amountController.clear();
+        }
+      },
     );
   }
 
@@ -108,53 +88,32 @@ class _HomePageState extends State<HomePage> {
     nameController.text = expense.name;
     amountController.text = expense.amount.toString();
 
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Edit Expense'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            CustomTextField(
-              label: 'Name',
-              controller: nameController,
-            ),
-            CustomTextField(
-              label: 'Amount',
-              controller: amountController,
-              keyboardType: const TextInputType.numberWithOptions(),
-            ),
-          ],
-        ),
-        actions: <Widget>[
-          CustomButton(
-            label: 'Cancel',
-            onPressed: () => _cancelButton(),
-          ),
-          CustomButton(
-            label: 'Save',
-            onPressed: () {
-              if (nameController.text.isNotEmpty || amountController.text.isNotEmpty) {
-                Navigator.pop(context);
+    customShowModalButtomSheet(
+      context,
+      nameController: nameController,
+      amountController: amountController,
+      type: ModalButtomSheetType.edit,
+      onPressed: () {
+        if (nameController.text.isNotEmpty || amountController.text.isNotEmpty) {
+          Navigator.pop(context);
 
-                Expense newExpense = Expense(
-                  name: nameController.text.isNotEmpty ? nameController.text : expense.name,
-                  amount: amountController.text.isNotEmpty ? convertToDouble(amountController.text) : expense.amount,
-                  date: DateTime.now(),
-                );
+          Expense newExpense = Expense(
+            name: nameController.text.isNotEmpty ? nameController.text : expense.name,
+            amount: amountController.text.isNotEmpty ? convertToDouble(amountController.text) : expense.amount,
+            date: DateTime.now(),
+          );
 
-                int oldId = expense.id;
+          int oldId = expense.id;
 
-                _homeController.editExpense(id: oldId, expense: newExpense);
+          _homeController.editExpense(id: oldId, expense: newExpense);
 
-                nameController.clear();
-                amountController.clear();
-              }
-            },
-          )
-        ],
-      ),
+          nameController.clear();
+          amountController.clear();
+        }
+      },
     );
+
+    log('CHAMOU DEPOIS');
   }
 
   void deleteExpense(int id) {
