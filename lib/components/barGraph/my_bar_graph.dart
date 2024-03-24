@@ -99,8 +99,8 @@ class _MyBarGraphState extends State<MyBarGraph> {
                         child: Text(
                           text,
                           style: TextStyle(
-                            fontSize: Constants.defaultFontSize,
                             fontWeight: FontWeight.bold,
+                            fontSize: Constants.defaultFontSize,
                             color: Theme.of(context).colorScheme.onSecondaryContainer,
                           ),
                         ),

@@ -5,7 +5,7 @@ class CustomContainer extends StatelessWidget {
   const CustomContainer({
     super.key,
     required this.child,
-    this.padding = const EdgeInsets.symmetric(vertical: 10),
+    this.padding = const EdgeInsets.symmetric(vertical: 8),
     this.margin = const EdgeInsets.symmetric(horizontal: Constants.defaultMargin),
   });
 

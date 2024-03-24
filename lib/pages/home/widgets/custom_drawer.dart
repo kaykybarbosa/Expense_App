@@ -25,7 +25,7 @@ class CustomDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         physics: const BouncingScrollPhysics(),
-        children: [
+        children: <Widget>[
           DrawerHeader(
             margin: EdgeInsets.zero,
             padding: EdgeInsets.zero,

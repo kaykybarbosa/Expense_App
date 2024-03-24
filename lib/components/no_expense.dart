@@ -15,18 +15,19 @@ class NoExpense extends StatelessWidget {
           child: Column(
             children: [
               const Text(
-                'No expense',
+                'No expenses',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 22,
                   color: MyColors.base300,
                   fontWeight: FontWeight.bold,
                   fontStyle: FontStyle.italic,
                 ),
               ),
               Image.asset(
-                'assets/empty_expense.png',
+                'assets/empty_expense_.png',
                 width: 350,
                 height: 350,
+                color: MyColors.base300,
               ),
             ],
           ),
