@@ -29,7 +29,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
     if (widget.isRequiredFocus) {
       _focusNode = FocusNode();
-      _focusNode.requestFocus();
+
+      Future.delayed(
+        const Duration(milliseconds: 400),
+        () => _focusNode.requestFocus(),
+      );
     }
   }
 
