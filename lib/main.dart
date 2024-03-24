@@ -7,8 +7,8 @@ import 'database/expense_database.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await ExpenseDatabase.initialize();
   configureDependencies();
+  await ExpenseDatabase.initialize();
 
   runApp(const ExpenseApp());
 }

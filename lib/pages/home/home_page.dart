@@ -32,7 +32,11 @@ class _HomePageState extends State<HomePage> {
 
     _homeController = getIt<HomeController>();
     _homeController.getAllExpenses();
-    _homeController.addListener(() => setState(() {}));
+    _homeController.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+    });
 
     super.initState();
   }
