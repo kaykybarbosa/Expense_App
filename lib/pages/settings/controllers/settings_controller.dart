@@ -6,7 +6,7 @@ class SettingsController extends ChangeNotifier {
   SettingsController({required ISettingsService settingsService}) : _service = settingsService;
 
   final ISettingsService _service;
-  late SettingsModel _settings;
+  SettingsModel _settings = SettingsModel();
 
   SettingsModel get settings => _settings;
 
@@ -16,7 +16,7 @@ class SettingsController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setSettings(SettingsModel setttins) async => {
+  Future<void> setSettings(SettingsModel settings) async => {
         await _service.setSettings(settings),
         getSettings(),
       };
