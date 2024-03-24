@@ -1,6 +1,8 @@
 import 'package:expense_app/app/routes/app_routes.dart';
 import 'package:expense_app/pages/home/home_page.dart';
 import 'package:expense_app/pages/settings/settings_page.dart';
+import 'package:expense_app/pages/settings/sub_pages/app_info_page.dart';
+import 'package:expense_app/pages/settings/sub_pages/help_page.dart';
 import 'package:go_router/go_router.dart';
 
 class AppPages {
@@ -17,6 +19,18 @@ class AppPages {
         path: AppRoutes.settings,
         builder: (context, state) {
           return const SettingsPage();
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.help,
+        builder: (context, state) {
+          return const HelpPage();
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.appInfo,
+        builder: (context, state) {
+          return const AppInfoPage();
         },
       ),
     ],
