@@ -49,6 +49,9 @@ dependencies:
   # Icons
   icons_plus: ^5.0.0
 
+  # Drawer hidden
+  flutter_advanced_drawer: ^1.3.6
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
