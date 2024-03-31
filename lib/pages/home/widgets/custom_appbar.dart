@@ -17,7 +17,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       leading: GestureDetector(
         onTap: () => homeState?.drawerController.showDrawer(),
-        child: const Icon(MyIcons.menu),
+        child: const Icon(
+          size: 26,
+          MyIcons.menu,
+        ),
       ),
       title: FutureBuilder(
         future: future,

@@ -13,7 +13,8 @@ class MyIcons {
   static const IconData iconApp = FontAwesome.chart_simple_solid;
   static const IconData help = Icons.help;
   static const IconData info = Icons.info;
-  static const IconData menu = HeroIcons.bars_3_bottom_left;
+  static const IconData menu = BoxIcons.bx_menu_alt_left;
+  // static const IconData menu = HeroIcons.bars_3_bottom_left;
   static const IconData home = HeroIcons.home;
   static const IconData add = HeroIcons.plus;
   static const IconData settings = HeroIcons.cog_8_tooth;
