@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:expense_app/domain/models/expense.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -29,11 +27,8 @@ class ExpenseDatabase {
   */
 
   // Create - add a new expense
-  Future<void> createExpense(Expense expense) async {
-    await isar.writeTxn(() async => await isar.expenses.put(expense));
-
-    log('ADICIONOU EXPENSE', name: 'GRAPH TEST');
-  }
+  Future<void> createExpense(Expense expense) async =>
+      await isar.writeTxn(() async => await isar.expenses.put(expense));
 
   // Read - expense fom db
   Future<List<Expense>> getAllExpenses() async => await isar.expenses.where().findAll();
@@ -46,7 +41,6 @@ class ExpenseDatabase {
   }
 
   // Delete -  an expense
-  Future<void> deleteExpense({required int id}) async {
-    await isar.writeTxn(() async => await isar.expenses.delete(id));
-  }
+  Future<void> deleteExpense({required int id}) async =>
+      await isar.writeTxn(() async => await isar.expenses.delete(id));
 }
