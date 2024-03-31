@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:expense_app/database/expense_database.dart';
 import 'package:expense_app/domain/models/expense.dart';
 import 'package:expense_app/helper/helper_functions.dart';
@@ -47,8 +45,6 @@ class HomeController extends ChangeNotifier {
 
   // calculate current month total
   Future<double> calculateCurrentMonthExpenses() async {
-    log('CHEGOU NA FUNÇÃO - ${_expenses.length} length', name: 'GRAPH TEST');
-
     var now = DateTime.now();
     int currentMonth = now.month;
     int currentYear = now.year;
@@ -60,8 +56,6 @@ class HomeController extends ChangeNotifier {
         .toList();
 
     double total = currentMonthExpenses.fold(0, (sum, expense) => sum + expense.amount);
-
-    log('SOMA DAS EXPENSES - ${_expenses.length} length ; TOTAL - $total', name: 'GRAPH TEST');
 
     return total;
   }
@@ -103,8 +97,6 @@ class HomeController extends ChangeNotifier {
 
   Future<void> getAllExpenses() async {
     List<Expense> expenses = await _db.getAllExpenses();
-
-    log('LENDO AS EXPENSES - ${expenses.length} length', name: 'GRAPH TEST');
 
     _expenses.clear();
     _expenses.addAll(expenses);
