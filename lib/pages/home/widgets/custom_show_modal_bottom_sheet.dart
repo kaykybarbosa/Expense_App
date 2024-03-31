@@ -40,7 +40,7 @@ void customShowModalButtomSheet(
                   CustomTextField(
                     label: 'Amount',
                     controller: amountController,
-                    keyboardType: const TextInputType.numberWithOptions(),
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
                   ),
                   const SizedBox(height: 30),
                   SizedBox(

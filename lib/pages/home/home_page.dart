@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:expense_app/components/barGraph/my_bar_graph.dart';
 import 'package:expense_app/components/custom_button.dart';
 import 'package:expense_app/components/my_list_tile.dart';
@@ -13,28 +11,31 @@ import 'package:expense_app/pages/home/widgets/custom_drawer.dart';
 import 'package:expense_app/pages/home/widgets/custom_show_modal_bottom_sheet.dart';
 import 'package:expense_app/utils/my_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
   late TextEditingController nameController;
   late TextEditingController amountController;
+  late final AdvancedDrawerController drawerController;
 
-  late HomeController _homeController;
+  late HomeController homeController;
 
   @override
   void initState() {
     nameController = TextEditingController();
     amountController = TextEditingController();
+    drawerController = AdvancedDrawerController();
 
-    _homeController = getIt<HomeController>();
-    _homeController.getAllExpenses();
-    _homeController.addListener(() {
+    homeController = getIt<HomeController>();
+    homeController.getAllExpenses();
+    homeController.addListener(() {
       if (mounted) {
         setState(() {});
       }
@@ -47,6 +48,7 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     nameController.dispose();
     amountController.dispose();
+    drawerController.dispose();
     super.dispose();
   }
 
@@ -75,7 +77,7 @@ class _HomePageState extends State<HomePage> {
             date: DateTime.now(),
           );
 
-          _homeController.addExpense(expense);
+          homeController.addExpense(expense);
 
           nameController.clear();
           amountController.clear();
@@ -105,15 +107,13 @@ class _HomePageState extends State<HomePage> {
 
           int oldId = expense.id;
 
-          _homeController.editExpense(id: oldId, expense: newExpense);
+          homeController.editExpense(id: oldId, expense: newExpense);
 
           nameController.clear();
           amountController.clear();
         }
       },
     );
-
-    log('CHAMOU DEPOIS');
   }
 
   void deleteExpense(int id) {
@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.pop(context);
 
-              _homeController.deleteExpense(id);
+              homeController.deleteExpense(id);
             },
           )
         ],
@@ -145,62 +145,69 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => AdvancedDrawer(
+        openScale: .90,
+        disabledGestures: true,
         drawer: const CustomDrawer(),
-        appBar: CustomAppBar(future: _homeController.calculateCurrentMonthExpenses()),
-        floatingActionButton: FloatingActionButton(
-          onPressed: createExpense,
-          child: const Icon(MyIcons.add),
-        ),
-        body: SafeArea(
-          child: Stack(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  // GRAPH BAR
-                  SizedBox(
-                    height: 250,
-                    child: FutureBuilder(
-                      future: _homeController.monthlySummary(),
-                      builder: (_, snapshot) {
-                        // data is load
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          return MyBarGraph(
-                            monthlySummary: snapshot.data ?? [],
-                            startMonth: _homeController.startMonth,
+        controller: drawerController,
+        animationCurve: Curves.easeInOut,
+        backdrop: Container(color: Theme.of(context).shadowColor),
+        child: Scaffold(
+          appBar: CustomAppBar(future: homeController.calculateCurrentMonthExpenses()),
+          floatingActionButton: FloatingActionButton(
+            onPressed: createExpense,
+            child: const Icon(MyIcons.add),
+          ),
+          body: SafeArea(
+            child: Stack(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    // GRAPH BAR
+                    SizedBox(
+                      height: 250,
+                      child: FutureBuilder(
+                        future: homeController.monthlySummary(),
+                        builder: (_, snapshot) {
+                          // data is load
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            return MyBarGraph(
+                              monthlySummary: snapshot.data ?? [],
+                              startMonth: homeController.startMonth,
+                            );
+                          }
+                          // loading...
+                          else {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 25),
+
+                    // EXPENSE LIST
+                    Expanded(
+                      child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: homeController.currentMonthExpenses.length,
+                        itemBuilder: (_, index) {
+                          var reversedIndex = homeController.currentMonthExpenses.length - index - 1;
+                          var expense = homeController.currentMonthExpenses[reversedIndex];
+
+                          return MyListTile(
+                            expense: expense,
+                            onEditPressed: (context) => editExpense(expense),
+                            onDeletePressed: (context) => deleteExpense(expense.id),
                           );
-                        }
-                        // loading...
-                        else {
-                          return const Center(child: CircularProgressIndicator());
-                        }
-                      },
+                        },
+                      ),
                     ),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  // EXPENSE LIST
-                  Expanded(
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: _homeController.currentMonthExpenses.length,
-                      itemBuilder: (_, index) {
-                        var reversedIndex = _homeController.currentMonthExpenses.length - index - 1;
-                        var expense = _homeController.currentMonthExpenses[reversedIndex];
-
-                        return MyListTile(
-                          expense: expense,
-                          onEditPressed: (context) => editExpense(expense),
-                          onDeletePressed: (context) => deleteExpense(expense.id),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              NoExpense(visible: _homeController.currentMonthExpenses.isEmpty)
-            ],
+                  ],
+                ),
+                NoExpense(visible: homeController.currentMonthExpenses.isEmpty)
+              ],
+            ),
           ),
         ),
       );
