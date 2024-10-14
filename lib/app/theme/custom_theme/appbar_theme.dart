@@ -13,10 +13,10 @@ class EAppBarTheme {
       color: MyColors.primary,
     ),
     backgroundColor: Colors.transparent,
-    systemOverlayStyle: const SystemUiOverlayStyle(
+    systemOverlayStyle:  SystemUiOverlayStyle(
       statusBarBrightness: Brightness.light, // For iphone
       statusBarIconBrightness: Brightness.dark,
-      statusBarColor: Colors.transparent,
+      statusBarColor: MyColors.base300Shade200,
     ),
   );
 
@@ -27,10 +27,10 @@ class EAppBarTheme {
       color: MyColors.darkPrimary,
     ),
     backgroundColor: Colors.transparent,
-    systemOverlayStyle: const SystemUiOverlayStyle(
+    systemOverlayStyle:  SystemUiOverlayStyle(
       statusBarBrightness: Brightness.dark, // For iphone
       statusBarIconBrightness: Brightness.light,
-      statusBarColor: Colors.transparent,
+      statusBarColor: MyColors.base300Shade800,
     ),
   );
 }
