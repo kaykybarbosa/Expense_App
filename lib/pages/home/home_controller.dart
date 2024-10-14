@@ -1,7 +1,10 @@
 import 'package:expense_app/database/expense_database.dart';
+import 'package:expense_app/domain/enums/expense_type.dart';
 import 'package:expense_app/domain/models/expense.dart';
 import 'package:expense_app/helper/helper_functions.dart';
 import 'package:flutter/material.dart';
+
+export 'package:expense_app/domain/enums/expense_type.dart';
 
 class HomeController extends ChangeNotifier {
   final ExpenseDatabase _db = ExpenseDatabase();
@@ -40,18 +43,21 @@ class HomeController extends ChangeNotifier {
   int monthCount() => calculateMonthCount(startYear, startMonth, currentYear, currentMonth);
 
   // only display the expense for the current month
-  List<Expense> get currentMonthExpenses =>
-      _expenses.where((expense) => expense.date.year == currentYear && expense.date.month == currentMonth).toList();
+  List<Expense> get currentMonthExpenses => _expenses
+      .where(
+        (expense) => expense.date.year == currentYear && expense.date.month == currentMonth,
+      )
+      .toList();
 
-  // calculate current month total
-  Future<double> calculateCurrentMonthExpenses() async {
-    var now = DateTime.now();
+  // Calculate current month total based on the given [type].
+  Future<double> calculateCurrentMonthExpenses({required ExpenseType type}) async {
+    final now = DateTime.now();
     int currentMonth = now.month;
     int currentYear = now.year;
 
     List<Expense> currentMonthExpenses = _expenses
         .where(
-          (expense) => expense.date.month == currentMonth && expense.date.year == currentYear,
+          (expense) => expense.date.month == currentMonth && expense.date.year == currentYear && expense.type == type,
         )
         .toList();
 
@@ -62,8 +68,20 @@ class HomeController extends ChangeNotifier {
 
   // futures to load graph data & monthly total
   // create the list monthly summary
-  Future<List<double>> monthlySummary() async {
-    Map<String, dynamic> monthlyTotals = await calculateMonthlyTotals();
+  Future<List<Map<String, dynamic>>> monthlySummary({required ExpenseType type}) async {
+    List<Expense> incomes = [];
+    List<Expense> expenses = [];
+
+    for (final expense in _expenses) {
+      if (expense.type.isIncome) {
+        incomes.add(expense);
+      } else {
+        expenses.add(expense);
+      }
+    }
+
+    Map<String, dynamic> monthlyTotalsIncomes = _calculateMonthlyTotals(expenses: incomes);
+    Map<String, dynamic> monthlyTotalsExpenses = _calculateMonthlyTotals(expenses: expenses);
 
     return List.generate(
       monthCount(),
@@ -73,16 +91,19 @@ class HomeController extends ChangeNotifier {
 
         String yearMonthKey = '$year-$month';
 
-        return monthlyTotals[yearMonthKey] ?? 0.0;
+        return {
+          'incomes': monthlyTotalsIncomes[yearMonthKey] ?? 0.0,
+          'expenses': monthlyTotalsExpenses[yearMonthKey] ?? 0.0,
+        };
       },
     );
   }
 
   // calculate total expense for each month
-  Future<Map<String, double>> calculateMonthlyTotals() async {
+  Map<String, double> _calculateMonthlyTotals({List<Expense> expenses = const []}) {
     Map<String, double> monthlyTotals = {};
 
-    for (var expense in _expenses) {
+    for (final expense in expenses) {
       String yearMonth = '${expense.date.year}-${expense.date.month}';
 
       if (!monthlyTotals.containsKey(yearMonth)) {
