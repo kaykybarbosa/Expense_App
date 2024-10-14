@@ -10,10 +10,10 @@ class NoExpense extends StatelessWidget {
   Widget build(BuildContext context) => Visibility(
         visible: visible,
         child: Positioned(
-          bottom: 40,
-          left: 20,
+          bottom: 10,
           child: Column(
-            children: [
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
               const Text(
                 'No expenses',
                 style: TextStyle(
@@ -28,6 +28,7 @@ class NoExpense extends StatelessWidget {
                 width: 350,
                 height: 350,
                 color: MyColors.base300,
+                fit: BoxFit.cover,
               ),
             ],
           ),
