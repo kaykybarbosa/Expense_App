@@ -1,6 +1,6 @@
-import 'package:expense_app/components/barGraph/individual_bar.dart';
 import 'package:expense_app/helper/helper_functions.dart';
 import 'package:expense_app/utils/constants.dart';
+import 'package:expense_app/utils/my_colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +11,7 @@ class MyBarGraph extends StatefulWidget {
     required this.startMonth,
   });
 
-  final List<double> monthlySummary;
+  final List<Map<String, dynamic>> monthlySummary;
   final int startMonth;
 
   @override
@@ -19,34 +19,54 @@ class MyBarGraph extends StatefulWidget {
 }
 
 class _MyBarGraphState extends State<MyBarGraph> {
-  List<IndividualBar> barData = [];
+  final String incomesKey = 'incomes';
+  final String expensesKey = 'expenses';
+  List<Map<String, dynamic>> barData = [];
+
   late final ScrollController _scrollController;
 
-  void initializeBarData() {
+  void _initializeBarData() {
     barData = List.generate(
       widget.monthlySummary.length,
-      (index) => IndividualBar(
-        x: (widget.startMonth + index) - 1,
-        y: widget.monthlySummary[index],
-      ),
+      (index) {
+        final monthlySummaryMap = widget.monthlySummary[index];
+
+        return {
+          'month': (widget.startMonth + index) - 1,
+          'summary': [
+            monthlySummaryMap[incomesKey] ?? 0.0,
+            monthlySummaryMap[expensesKey] ?? 0.0,
+          ],
+        };
+      },
     );
   }
 
-  double calculateMax() {
-    double max = 500;
+  double _calculateMax() {
+    const double max_ = 500;
+    double max = max_;
 
-    widget.monthlySummary.sort();
+    List<double> amounts = [];
 
-    max = widget.monthlySummary.last * 1.5;
-
-    if (max < 500) {
-      return 500;
+    for (final map in widget.monthlySummary) {
+      amounts.addAll(
+        [
+          map[incomesKey],
+          map[expensesKey],
+        ],
+      );
     }
+
+    amounts.sort();
+
+    max = amounts.last * 1.5;
+
+    if (max < max_) return max_;
 
     return max;
   }
 
-  void scrollToEnd() {
+  void _scrollToEnd() {
     _scrollController.animateTo(
       _scrollController.position.maxScrollExtent,
       duration: const Duration(seconds: 1),
@@ -59,16 +79,22 @@ class _MyBarGraphState extends State<MyBarGraph> {
     super.initState();
     _scrollController = ScrollController();
 
-    Future.delayed(Duration.zero, () => scrollToEnd());
+    Future.delayed(Duration.zero, () => _scrollToEnd());
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     // initialize upon build
-    initializeBarData();
+    _initializeBarData();
 
-    double barWidth = 20;
-    double spaceBetweenBars = 15;
+    const double barWidth = 20;
+    const double spaceBetweenBars = 75;
 
     return SingleChildScrollView(
       controller: _scrollController,
@@ -80,7 +106,7 @@ class _MyBarGraphState extends State<MyBarGraph> {
           child: BarChart(
             BarChartData(
               minY: 0,
-              maxY: calculateMax(),
+              maxY: _calculateMax(),
               gridData: const FlGridData(show: false),
               borderData: FlBorderData(show: false),
               titlesData: FlTitlesData(
@@ -110,26 +136,31 @@ class _MyBarGraphState extends State<MyBarGraph> {
                   ),
                 ),
               ),
-              barGroups: barData
-                  .map(
-                    (data) => BarChartGroupData(
-                      x: data.x,
-                      barRods: <BarChartRodData>[
-                        BarChartRodData(
-                          toY: data.y,
+              barGroups: barData.map(
+                (data) {
+                  return BarChartGroupData(
+                    x: data['month'],
+                    barRods: data['summary'].asMap().entries.map<BarChartRodData>(
+                      (entry) {
+                        final bool isIncome = entry.key == 0;
+                        final double value = entry.value;
+
+                        return BarChartRodData(
+                          toY: value,
                           width: barWidth,
                           borderRadius: BorderRadius.circular(Constants.borderRadius),
-                          color: Theme.of(context).colorScheme.secondaryContainer,
+                          color: isIncome ? MyColors.success : Theme.of(context).colorScheme.errorContainer,
                           backDrawRodData: BackgroundBarChartRodData(
                             show: true,
-                            toY: calculateMax(),
+                            toY: _calculateMax(),
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
-                        )
-                      ],
-                    ),
-                  )
-                  .toList(),
+                        );
+                      },
+                    ).toList(),
+                  );
+                },
+              ).toList(),
               alignment: BarChartAlignment.center,
               groupsSpace: spaceBetweenBars,
               barTouchData: BarTouchData(
