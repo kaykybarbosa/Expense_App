@@ -52,6 +52,9 @@ dependencies:
   # Drawer hidden
   flutter_advanced_drawer: ^1.3.6
 
+  # Multiple Floating Action Buttons
+  flutter_speed_dial: ^7.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
