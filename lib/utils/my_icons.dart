@@ -21,4 +21,9 @@ class MyIcons {
   static const IconData delete = HeroIcons.trash;
   static const IconData moon = HeroIcons.moon;
   static const IconData copyright = FontAwesome.copyright;
+  static const IconData arrowUp = HeroIcons.arrow_up;
+  static const IconData arrowDown = HeroIcons.arrow_down;
+  static const IconData trendingUp = HeroIcons.arrow_trending_up;
+  static const IconData trendingDown = HeroIcons.arrow_trending_down;
+  static const IconData edit = HeroIcons.pencil;
 }

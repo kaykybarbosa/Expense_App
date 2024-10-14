@@ -7,7 +7,7 @@ class EColorSchemeTheme {
   static ColorScheme lightTheme = ColorScheme.light(
     primary: MyColors.primary,
     onPrimary: MyColors.base100,
-    background: MyColors.scaffoldColor,
+    surface: MyColors.scaffoldColor,
     primaryContainer: MyColors.base300Shade200,
     secondaryContainer: MyColors.base300Shade800,
     onSecondaryContainer: MyColors.base300,
@@ -17,7 +17,7 @@ class EColorSchemeTheme {
   static ColorScheme darkTheme = ColorScheme.dark(
     primary: MyColors.darkPrimary,
     onPrimary: MyColors.darkBase100,
-    background: MyColors.darkScaffoldColor,
+    surface: MyColors.darkScaffoldColor,
     primaryContainer: MyColors.base300Shade800,
     secondaryContainer: MyColors.base300Shade200,
     onSecondaryContainer: MyColors.base300,

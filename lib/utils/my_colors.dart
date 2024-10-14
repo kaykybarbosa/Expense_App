@@ -23,4 +23,9 @@ class MyColors {
   static const Color darkBase100 = Colors.black;
 
   static Color darkAlert = const Color.fromARGB(218, 244, 55, 41);
+
+  // A P P
+
+  static Color success = const Color(0xFF4fc951);
+  static Color warn = const Color(0xFFE0252B);
 }
