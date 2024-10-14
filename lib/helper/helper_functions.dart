@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 double convertToDouble(String value) => double.tryParse(value) ?? 0;
 
 String formatAmount(double value) =>
-    NumberFormat.currency(locale: "pt_BR", symbol: "\$", decimalDigits: 2).format(value);
+    NumberFormat.currency(locale: "pt_BR", symbol: "R\$", decimalDigits: 2).format(value);
 
 String formatDate(DateTime date) {
   var format = DateFormat('dd/MM/yyyy');
