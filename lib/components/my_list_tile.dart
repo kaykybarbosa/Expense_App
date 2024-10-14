@@ -1,4 +1,5 @@
 import 'package:expense_app/components/custom_container.dart';
+import 'package:expense_app/domain/enums/expense_type.dart';
 import 'package:expense_app/domain/models/expense.dart';
 import 'package:expense_app/helper/helper_functions.dart';
 import 'package:expense_app/utils/constants.dart';
@@ -30,7 +31,7 @@ class MyListTile extends StatelessWidget {
             motion: const StretchMotion(),
             children: <Widget>[
               SlidableAction(
-                icon: MyIcons.settings,
+                icon: MyIcons.edit,
                 onPressed: onEditPressed,
                 backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
                 foregroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -49,7 +50,10 @@ class MyListTile extends StatelessWidget {
             margin: EdgeInsets.zero,
             padding: EdgeInsets.zero,
             child: ListTile(
+              /// Name
               title: Text(expense.name),
+
+              /// Date
               subtitle: Text(
                 formatDate(expense.date),
                 style: const TextStyle(
@@ -57,9 +61,14 @@ class MyListTile extends StatelessWidget {
                   fontSize: 13,
                 ),
               ),
+
+              /// Amount
               trailing: Text(
                 formatAmount(expense.amount),
-                style: const TextStyle(fontSize: Constants.defaultFontSize),
+                style: TextStyle(
+                  fontSize: Constants.defaultFontSize,
+                  color: expense.type.isIncome ? MyColors.success : Theme.of(context).colorScheme.errorContainer,
+                ),
               ),
             ),
           ),
