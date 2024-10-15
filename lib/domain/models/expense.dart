@@ -1,21 +1,23 @@
 import 'package:expense_app/domain/enums/expense_type.dart';
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
-part 'expense.g.dart';
-
-@Collection()
+@Entity()
 class Expense {
   Expense({
+    this.id = 0,
     required this.name,
     required this.amount,
     required this.date,
-    ExpenseType? type,
-  }) : type = type ?? ExpenseType.expense;
+    required this.typeIndex,
+  });
 
-  Id id = Isar.autoIncrement;
+  @Id()
+  int id;
   final String name;
   final double amount;
+  @Property(type: PropertyType.date)
   final DateTime date;
-  @enumerated
-  final ExpenseType type;
+  final int typeIndex;
+
+  ExpenseType get type => ExpenseType.values[typeIndex];
 }

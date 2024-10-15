@@ -1,24 +1,29 @@
+import 'package:expense_app/dependency_injection/app_component.dart';
 import 'package:expense_app/domain/models/expense.dart';
-import 'package:isar/isar.dart';
+import 'package:expense_app/objectbox.g.dart';
 import 'package:path_provider/path_provider.dart';
 
-class ExpenseDatabase {
-  static late Isar isar;
-
-  /*
-
-  S E T U P
-
-  */
-
-  // initialize database
-  static Future<void> initialize() async {
-    final dir = await getApplicationDocumentsDirectory();
-    isar = await Isar.open(
-      [ExpenseSchema],
-      directory: dir.path,
-    );
+abstract class IExpenseDatabase {
+  static Future<Store> get initialize async {
+    final docsDir = await getApplicationDocumentsDirectory();
+    return await openStore(directory: '${docsDir.path}/objectBox');
   }
+
+  static IExpenseDatabase get instance => getIt<IExpenseDatabase>();
+
+  List<Expense> get getAllExpenses;
+
+  void createExpense(Expense expense);
+
+  void updateExpense({required int id, required Expense expense});
+
+  void deleteExpense({required int id});
+}
+
+class ExpenseDatabase implements IExpenseDatabase {
+  ExpenseDatabase({required this.store});
+
+  final Store store;
 
   /*
 
@@ -26,21 +31,33 @@ class ExpenseDatabase {
 
   */
 
-  // Create - add a new expense
-  Future<void> createExpense(Expense expense) async =>
-      await isar.writeTxn(() async => await isar.expenses.put(expense));
-
   // Read - expense fom db
-  Future<List<Expense>> getAllExpenses() async => await isar.expenses.where().findAll();
+  @override
+  List<Expense> get getAllExpenses {
+    final expenseBox = store.box<Expense>();
+
+    return expenseBox.getAll();
+  }
+
+  // Create - add a new expense
+  @override
+  void createExpense(Expense expense) {
+    final expenseBox = store.box<Expense>();
+
+    expenseBox.put(expense);
+  }
 
   // Update - edit an expense in db
-  Future<void> updateExpense({required int id, required Expense expense}) async {
+  @override
+  void updateExpense({required int id, required Expense expense}) {
+    final expenseBox = store.box<Expense>();
+
     expense.id = id;
 
-    await isar.writeTxn(() async => await isar.expenses.put(expense));
+    expenseBox.put(expense);
   }
 
   // Delete -  an expense
-  Future<void> deleteExpense({required int id}) async =>
-      await isar.writeTxn(() async => await isar.expenses.delete(id));
+  @override
+  void deleteExpense({required int id}) => store.box<Expense>().remove(id);
 }
