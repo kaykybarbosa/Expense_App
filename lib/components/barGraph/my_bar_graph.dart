@@ -165,7 +165,7 @@ class _MyBarGraphState extends State<MyBarGraph> {
               groupsSpace: spaceBetweenBars,
               barTouchData: BarTouchData(
                 touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: Theme.of(context).colorScheme.secondaryContainer,
+                  getTooltipColor: (_) => Theme.of(context).colorScheme.secondaryContainer,
                   tooltipHorizontalAlignment: FLHorizontalAlignment.right,
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     return BarTooltipItem(
