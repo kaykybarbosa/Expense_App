@@ -8,6 +8,7 @@ class CustomTextField extends StatelessWidget {
     this.controller,
     this.keyboardType,
     this.textInputAction = TextInputAction.next,
+    this.textCapitalization = TextCapitalization.none,
   });
 
   final String label;
@@ -15,6 +16,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final TextEditingController? controller;
   final TextInputAction? textInputAction;
+  final TextCapitalization textCapitalization;
 
   @override
   Widget build(BuildContext context) => TextField(
@@ -23,5 +25,6 @@ class CustomTextField extends StatelessWidget {
         decoration: InputDecoration(label: Text(label)),
         keyboardType: keyboardType,
         textInputAction: textInputAction,
+        textCapitalization: textCapitalization,
       );
 }

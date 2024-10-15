@@ -51,6 +51,7 @@ void customShowModalButtomSheet(
                     label: 'Name',
                     isRequiredFocus: buttomSheetType.isCreate,
                     controller: nameController,
+                    textCapitalization: TextCapitalization.words,
                   ),
 
                   /// Amout
