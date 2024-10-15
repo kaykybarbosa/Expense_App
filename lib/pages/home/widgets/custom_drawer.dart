@@ -29,6 +29,7 @@ class CustomDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         physics: const BouncingScrollPhysics(),
         children: <Widget>[
+          /// Icon
           DrawerHeader(
             margin: EdgeInsets.zero,
             padding: EdgeInsets.zero,
@@ -37,6 +38,8 @@ class CustomDrawer extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
+
+          /// Options
           Column(
             children: options
                 .map(

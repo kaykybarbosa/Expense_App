@@ -27,8 +27,8 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  late TextEditingController nameController;
-  late TextEditingController amountController;
+  late final TextEditingController nameController;
+  late final TextEditingController amountController;
   late final AdvancedDrawerController drawerController;
 
   late HomeController homeController;
@@ -112,7 +112,7 @@ class HomePageState extends State<HomePage> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[],
         ),
-        actions: [
+        actions: <Widget>[
           CustomButton(
             label: 'Cancel',
             onPressed: () => _cancelButton(),

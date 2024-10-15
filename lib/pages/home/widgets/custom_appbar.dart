@@ -62,6 +62,7 @@ class CustomAppbar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
               child: Row(
                 children: <Widget>[
+                  /// Incomes
                   Expanded(
                     child: FutureBuilder(
                       future: incomesFuture,
@@ -69,7 +70,7 @@ class CustomAppbar extends StatelessWidget {
                         String? total;
 
                         if (snapshot.connectionState == ConnectionState.done) {
-                          total = snapshot.data?.toStringAsFixed(2);
+                          total = formatAmount(snapshot.data ?? 0);
                         } else {
                           total = '...';
                         }
@@ -82,6 +83,8 @@ class CustomAppbar extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 10),
+
+                  /// Expenses
                   Expanded(
                     child: FutureBuilder(
                       future: expensesFuture,
@@ -89,7 +92,7 @@ class CustomAppbar extends StatelessWidget {
                         String? total;
 
                         if (snapshot.connectionState == ConnectionState.done) {
-                          total = snapshot.data?.toStringAsFixed(2);
+                          total = formatAmount(snapshot.data ?? 0);
                         } else {
                           total = '...';
                         }
@@ -151,7 +154,7 @@ class _DetailsExpense extends StatelessWidget {
                 ),
               ),
               Text(
-                'R\$ ${total ?? '0,00'}',
+                total ?? '0,00',
                 style: TextStyle(
                   color: color,
                   fontSize: Constants.defaultFontSize + 2,
