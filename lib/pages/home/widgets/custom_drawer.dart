@@ -33,7 +33,7 @@ class CustomDrawer extends StatelessWidget {
             margin: EdgeInsets.zero,
             padding: EdgeInsets.zero,
             child: Image.asset(
-              'assets/icon_android.png',
+              'assets/icon.png',
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
