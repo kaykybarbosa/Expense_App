@@ -16,6 +16,8 @@ import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 part 'widgets/_actions_button.dart';
+part 'widgets/_expense_list.dart';
+part 'widgets/_graphic.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -55,7 +57,7 @@ class HomePageState extends State<HomePage> {
             name: nameController.text,
             amount: convertToDouble(amountController.text),
             date: DateTime.now(),
-            type: type,
+            typeIndex: type?.index ?? ExpenseType.expense.index,
           );
 
           homeController.addExpense(expense);
@@ -85,6 +87,7 @@ class HomePageState extends State<HomePage> {
             name: nameController.text.isNotEmpty ? nameController.text : expense.name,
             amount: amountController.text.isNotEmpty ? convertToDouble(amountController.text) : expense.amount,
             date: expense.date,
+            typeIndex: expense.type.index,
           );
 
           int oldId = expense.id;
@@ -164,73 +167,43 @@ class HomePageState extends State<HomePage> {
         child: Scaffold(
           floatingActionButton: const _ActionsButton(),
           body: SafeArea(
-            child: Stack(
-              alignment: Alignment.bottomCenter,
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    // Appbar
-                    CustomAppbar(
-                      incomesFuture: homeController.calculateCurrentMonthExpenses(type: ExpenseType.income),
-                      expensesFuture: homeController.calculateCurrentMonthExpenses(type: ExpenseType.expense),
-                    ),
-
-                    const SizedBox(height: 15),
-
-                    // Graph bar
-                    SizedBox(
-                      height: 250,
-                      child: FutureBuilder(
-                        future: homeController.monthlySummary(type: ExpenseType.expense),
-                        builder: (_, snapshot) {
-                          // -- data loaded
-                          if (snapshot.connectionState == ConnectionState.done) {
-                            return MyBarGraph(
-                              monthlySummary: snapshot.data!,
-                              startMonth: homeController.startMonth,
-                            );
-                          }
-                          // -- loading...
-                          else {
-                            return const Center(child: CircularProgressIndicator());
-                          }
-                        },
-                      ),
-                    ),
-
-                    const SizedBox(height: 25),
-
-                    // Expense list
-                    Expanded(
-                      child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: homeController.currentMonthExpenses.length,
-                        itemBuilder: (_, index) {
-                          final int reversedIndex = homeController.currentMonthExpenses.length - index - 1;
-                          final Expense expense = homeController.currentMonthExpenses[reversedIndex];
-
-                          return MyListTile(
-                            expense: expense,
-                            onEditPressed: (context) => _editExpense(
-                              expense,
-                              type: expense.type,
-                            ),
-                            onDeletePressed: (context) => _deleteExpense(
-                              expense.id,
-                              type: expense.type,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-
-                /// No expenses image
-                NoExpense(visible: homeController.currentMonthExpenses.isEmpty),
-              ],
-            ),
+            child: homeController.currentMonthExpenses.isNotEmpty
+                ? _Body(child: _ExpenseList())
+                : SingleChildScrollView(
+                    child: _Body(child: NoExpense()),
+                  ),
           ),
         ),
       );
+}
+
+class _Body extends StatelessWidget {
+  const _Body({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final homeController = context.findAncestorStateOfType<HomePageState>()!.homeController;
+
+    return Column(
+      children: <Widget>[
+        // Appbar
+        CustomAppbar(
+          incomesFuture: homeController.calculateCurrentMonthExpenses(type: ExpenseType.income),
+          expensesFuture: homeController.calculateCurrentMonthExpenses(type: ExpenseType.expense),
+        ),
+
+        const SizedBox(height: 15),
+
+        // Bar graph
+        _Graphic(),
+
+        const SizedBox(height: 25),
+
+        // Child
+        child,
+      ],
+    );
+  }
 }

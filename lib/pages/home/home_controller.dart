@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 export 'package:expense_app/domain/enums/expense_type.dart';
 
 class HomeController extends ChangeNotifier {
-  final ExpenseDatabase _db = ExpenseDatabase();
+  final IExpenseDatabase _db = IExpenseDatabase.instance;
 
   final List<Expense> _expenses = [];
 
@@ -66,7 +66,7 @@ class HomeController extends ChangeNotifier {
     return total;
   }
 
-  // futures to load graph data & monthly total
+  // Futures to load graph data & monthly total
   // create the list monthly summary
   Future<List<Map<String, dynamic>>> monthlySummary({required ExpenseType type}) async {
     List<Expense> incomes = [];
@@ -117,7 +117,7 @@ class HomeController extends ChangeNotifier {
   }
 
   Future<void> getAllExpenses() async {
-    List<Expense> expenses = await _db.getAllExpenses();
+    List<Expense> expenses = _db.getAllExpenses;
 
     _expenses.clear();
     _expenses.addAll(expenses);
@@ -126,17 +126,17 @@ class HomeController extends ChangeNotifier {
   }
 
   Future<void> addExpense(Expense expense) async => {
-        await _db.createExpense(expense),
+        _db.createExpense(expense),
         await getAllExpenses(),
       };
 
   Future<void> editExpense({required int id, required Expense expense}) async => {
-        await _db.updateExpense(id: id, expense: expense),
+        _db.updateExpense(id: id, expense: expense),
         await getAllExpenses(),
       };
 
   Future<void> deleteExpense(int id) async => {
-        await _db.deleteExpense(id: id),
+        _db.deleteExpense(id: id),
         await getAllExpenses(),
       };
 }
