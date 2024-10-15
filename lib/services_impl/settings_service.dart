@@ -5,16 +5,10 @@ import 'package:expense_app/domain/models/settings_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsService implements ISettingsService {
+  SettingsService({required SharedPreferences sharedPrefs}) : _prefs = sharedPrefs;
+
   final KEY = 'SETTINGS_KEY';
-  late SharedPreferences _prefs;
-
-  SettingsService() {
-    _startPreferences();
-  }
-
-  _startPreferences() async {
-    _prefs = await SharedPreferences.getInstance();
-  }
+  final SharedPreferences _prefs;
 
   @override
   Future<void> setSettings(SettingsModel settings) async => await _prefs.setString(
