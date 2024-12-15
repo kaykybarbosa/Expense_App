@@ -8,12 +8,6 @@ String formatAmount(double value) => NumberFormat.currency(
       decimalDigits: 2,
     ).format(value);
 
-String formatDate(DateTime date) {
-  final format = DateFormat('dd/MM/yyyy');
-
-  return format.format(date);
-}
-
 int calculateMonthCount(startYear, startMonth, currentYear, currentMonth) =>
     (currentYear - startYear) * 12 + currentMonth - startMonth + 1;
 
