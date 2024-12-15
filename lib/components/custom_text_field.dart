@@ -14,6 +14,7 @@ class CustomTextField extends StatelessWidget {
     this.textCapitalization = TextCapitalization.none,
     this.inputFormatter,
     this.prefix,
+    this.suffixIcon,
   });
 
   final String label;
@@ -25,6 +26,7 @@ class CustomTextField extends StatelessWidget {
   final TextCapitalization textCapitalization;
   final TextInputFormatter? inputFormatter;
   final Widget? prefix;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) => TextField(
@@ -33,6 +35,7 @@ class CustomTextField extends StatelessWidget {
         decoration: InputDecoration(
           label: Text(label),
           prefix: prefix,
+          suffixIcon: suffixIcon,
           hintText: hintText,
           hintStyle: TextStyle(color: MyColors.base300),
         ),
