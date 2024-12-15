@@ -1,7 +1,7 @@
 import 'package:expense_app/components/custom_container.dart';
 import 'package:expense_app/domain/enums/expense_type.dart';
 import 'package:expense_app/domain/models/expense.dart';
-import 'package:expense_app/helper/helper_functions.dart';
+import 'package:expense_app/helpers/helper_functions.dart';
 import 'package:expense_app/utils/constants.dart';
 import 'package:expense_app/utils/my_colors.dart';
 import 'package:expense_app/utils/my_icons.dart';
