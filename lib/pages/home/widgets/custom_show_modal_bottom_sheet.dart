@@ -2,7 +2,11 @@
 
 import 'package:expense_app/components/custom_text_field.dart';
 import 'package:expense_app/domain/enums/expense_type.dart';
+import 'package:expense_app/extensions/date_time_extension.dart';
+import 'package:expense_app/extensions/string_extension.dart';
 import 'package:expense_app/utils/constants.dart';
+import 'package:expense_app/utils/input_formatter.dart';
+import 'package:expense_app/utils/my_icons.dart';
 import 'package:flutter/material.dart';
 
 enum ModalButtomSheetType { create, edit }
@@ -17,6 +21,7 @@ void customShowModalButtomSheet(
   required void Function()? onPressed,
   required TextEditingController nameController,
   required TextEditingController amountController,
+  required TextEditingController dateController,
   ModalButtomSheetType buttomSheetType = ModalButtomSheetType.create,
   ExpenseType? expenseType,
 }) async =>
@@ -27,56 +32,92 @@ void customShowModalButtomSheet(
           context: context,
           isScrollControlled: true,
           backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          builder: (context) {
-            return Container(
-              margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-              padding: const EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: Constants.defaultMargin,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  /// Title
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: _Title(
-                      buttomSheetType: buttomSheetType,
-                      expenseType: expenseType ?? ExpenseType.expense,
+          builder: (context) => Container(
+            margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: const EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: Constants.defaultMargin,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                /// Title
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: _Title(
+                    buttomSheetType: buttomSheetType,
+                    expenseType: expenseType ?? ExpenseType.expense,
+                  ),
+                ),
+
+                /// Form
+                Column(
+                  spacing: 10,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    /// -- Name
+                    CustomTextField(
+                      hintText: 'Name',
+                      label: 'Name',
+                      isRequiredFocus: buttomSheetType.isCreate,
+                      controller: nameController,
+                      textCapitalization: TextCapitalization.words,
                     ),
-                  ),
 
-                  /// Name
-                  CustomTextField(
-                    label: 'Name',
-                    isRequiredFocus: buttomSheetType.isCreate,
-                    controller: nameController,
-                    textCapitalization: TextCapitalization.words,
-                  ),
-
-                  /// Amout
-                  CustomTextField(
-                    label: 'Amount',
-                    controller: amountController,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    textInputAction: TextInputAction.done,
-                  ),
-
-                  const SizedBox(height: 30),
-
-                  /// Save
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: onPressed,
-                      child: const Text('SAVE'),
+                    /// -- Amount
+                    CustomTextField(
+                      label: 'Amount',
+                      controller: amountController,
+                      prefix: Text(
+                        'R\$ ',
+                        style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                      ),
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     ),
+
+                    /// -- Date
+                    CustomTextField(
+                      label: 'Date',
+                      hintText: 'dd/mm/yyyy',
+                      controller: dateController,
+                      suffixIcon: IconButton(
+                        onPressed: () async {
+                          final dateSelected = await showDatePicker(
+                            context: context,
+                            firstDate: DateTime(1900),
+                            initialDate: dateController.text.tryParse ?? DateTime.now(),
+                            lastDate: DateTime.now().add(Duration(days: 365)),
+                          );
+
+                          final date = dateSelected?.formatDate;
+                          if (date != null) {
+                            dateController.text = date;
+                          }
+                        },
+                        icon: Icon(MyIcons.calendar),
+                      ),
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
+                      inputFormatter: InputFormatter.date,
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 30),
+
+                /// Save
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: onPressed,
+                    child: const Text('SAVE'),
                   ),
-                  const SizedBox(height: 10),
-                ],
-              ),
-            );
-          },
+                ),
+
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
         );
       },
     );
