@@ -19,6 +19,9 @@ class AppTheme {
         dividerTheme: const DividerThemeData(color: MyColors.base100),
         elevatedButtonTheme: EElevatedButtonTheme.lightTheme,
         drawerTheme: EDrawerTheme.light,
+        scrollbarTheme: ScrollbarThemeData(
+          thumbColor: WidgetStatePropertyAll(MyColors.base300),
+        ),
       );
 
   static ThemeData get dark => ThemeData(
