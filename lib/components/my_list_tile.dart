@@ -1,6 +1,7 @@
 import 'package:expense_app/components/custom_container.dart';
 import 'package:expense_app/domain/enums/expense_type.dart';
 import 'package:expense_app/domain/models/expense.dart';
+import 'package:expense_app/extensions/date_time_extension.dart';
 import 'package:expense_app/helpers/helper_functions.dart';
 import 'package:expense_app/utils/constants.dart';
 import 'package:expense_app/utils/my_colors.dart';
@@ -55,7 +56,7 @@ class MyListTile extends StatelessWidget {
 
               /// Date
               subtitle: Text(
-                formatDate(expense.date),
+                expense.date.formatDate,
                 style: const TextStyle(
                   color: MyColors.base300,
                   fontSize: 13,
