@@ -4,7 +4,9 @@ import 'package:expense_app/components/my_list_tile.dart';
 import 'package:expense_app/components/no_expense.dart';
 import 'package:expense_app/dependency_injection/app_component.dart';
 import 'package:expense_app/domain/models/expense.dart';
-import 'package:expense_app/helper/helper_functions.dart';
+import 'package:expense_app/extensions/date_time_extension.dart';
+import 'package:expense_app/extensions/string_extension.dart';
+import 'package:expense_app/helpers/helper_functions.dart';
 import 'package:expense_app/pages/home/home_controller.dart';
 import 'package:expense_app/pages/home/widgets/custom_appbar.dart';
 import 'package:expense_app/pages/home/widgets/custom_drawer.dart';
@@ -29,26 +31,26 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   late final TextEditingController nameController;
   late final TextEditingController amountController;
+  late final TextEditingController dateController;
   late final AdvancedDrawerController drawerController;
 
   late HomeController homeController;
 
-  void _cancelButton() {
-    Navigator.pop(context);
-
+  void _cleanFormControllers() {
     nameController.clear();
     amountController.clear();
+    dateController.clear();
   }
 
   void _createExpense({ExpenseType? type}) {
-    nameController.clear();
-    amountController.clear();
+    _cleanFormControllers();
 
     customShowModalButtomSheet(
       context,
       expenseType: type,
       nameController: nameController,
       amountController: amountController,
+      dateController: dateController,
       onPressed: () {
         if (nameController.text.isNotEmpty && amountController.text.isNotEmpty) {
           Navigator.pop(context);
@@ -56,14 +58,13 @@ class HomePageState extends State<HomePage> {
           Expense expense = Expense(
             name: nameController.text,
             amount: convertToDouble(amountController.text),
-            date: DateTime.now(),
+            date: dateController.text.tryParse ?? DateTime.now(),
             typeIndex: type?.index ?? ExpenseType.expense.index,
           );
 
           homeController.addExpense(expense);
 
-          nameController.clear();
-          amountController.clear();
+          _cleanFormControllers();
         }
       },
     );
@@ -72,11 +73,13 @@ class HomePageState extends State<HomePage> {
   void _editExpense(Expense expense, {ExpenseType? type}) {
     nameController.text = expense.name;
     amountController.text = expense.amount.toString();
+    dateController.text = expense.date.formatDate;
 
     customShowModalButtomSheet(
       context,
       nameController: nameController,
       amountController: amountController,
+      dateController: dateController,
       buttomSheetType: ModalButtomSheetType.edit,
       expenseType: type,
       onPressed: () {
@@ -86,16 +89,13 @@ class HomePageState extends State<HomePage> {
           Expense newExpense = Expense(
             name: nameController.text.isNotEmpty ? nameController.text : expense.name,
             amount: amountController.text.isNotEmpty ? convertToDouble(amountController.text) : expense.amount,
-            date: expense.date,
+            date: dateController.text.isNotEmpty ? (dateController.text.tryParse ?? expense.date) : expense.date,
             typeIndex: expense.type.index,
           );
 
-          int oldId = expense.id;
+          homeController.editExpense(id: expense.id, expense: newExpense);
 
-          homeController.editExpense(id: oldId, expense: newExpense);
-
-          nameController.clear();
-          amountController.clear();
+          _cleanFormControllers();
         }
       },
     );
@@ -115,15 +115,17 @@ class HomePageState extends State<HomePage> {
         actions: <Widget>[
           CustomButton(
             label: 'Cancel',
-            onPressed: () => _cancelButton(),
+            onPressed: () => {
+              Navigator.pop(context),
+              _cleanFormControllers(),
+            },
           ),
           CustomButton(
             isDanger: true,
             label: 'Delete',
-            onPressed: () {
-              Navigator.pop(context);
-
-              homeController.deleteExpense(id);
+            onPressed: () => {
+              Navigator.pop(context),
+              homeController.deleteExpense(id),
             },
           )
         ],
@@ -135,10 +137,14 @@ class HomePageState extends State<HomePage> {
   void initState() {
     nameController = TextEditingController();
     amountController = TextEditingController();
+    dateController = TextEditingController();
+
     drawerController = AdvancedDrawerController();
 
     homeController = getIt<HomeController>();
     homeController.getAllExpenses();
+
+    /// TODO:
     homeController.addListener(() {
       if (mounted) {
         setState(() {});
@@ -152,6 +158,7 @@ class HomePageState extends State<HomePage> {
   void dispose() {
     nameController.dispose();
     amountController.dispose();
+    dateController.dispose();
     drawerController.dispose();
     super.dispose();
   }
@@ -169,9 +176,7 @@ class HomePageState extends State<HomePage> {
           body: SafeArea(
             child: homeController.currentMonthExpenses.isNotEmpty
                 ? _Body(child: _ExpenseList())
-                : SingleChildScrollView(
-                    child: _Body(child: NoExpense()),
-                  ),
+                : SingleChildScrollView(child: _Body(child: NoExpense())),
           ),
         ),
       );
@@ -187,6 +192,7 @@ class _Body extends StatelessWidget {
     final homeController = context.findAncestorStateOfType<HomePageState>()!.homeController;
 
     return Column(
+      spacing: 15,
       children: <Widget>[
         // Appbar
         CustomAppbar(
@@ -194,12 +200,10 @@ class _Body extends StatelessWidget {
           expensesFuture: homeController.calculateCurrentMonthExpenses(type: ExpenseType.expense),
         ),
 
-        const SizedBox(height: 15),
-
         // Bar graph
         _Graphic(),
 
-        const SizedBox(height: 25),
+        const SizedBox(height: 10),
 
         // Child
         child,

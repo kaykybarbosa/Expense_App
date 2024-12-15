@@ -5,7 +5,7 @@ class SettingsModel {
 
   final bool isDark;
 
-  factory SettingsModel.fromJson(String source) => SettingsModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory SettingsModel.fromJson(String source) => SettingsModel.fromMap(json.decode(source));
 
   factory SettingsModel.fromMap(Map<String, dynamic> map) => SettingsModel(isDark: map['isDark']);
 

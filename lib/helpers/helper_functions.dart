@@ -2,14 +2,11 @@ import 'package:intl/intl.dart';
 
 double convertToDouble(String value) => double.tryParse(value) ?? 0;
 
-String formatAmount(double value) =>
-    NumberFormat.currency(locale: "pt_BR", symbol: "R\$", decimalDigits: 2).format(value);
-
-String formatDate(DateTime date) {
-  var format = DateFormat('dd/MM/yyyy');
-
-  return format.format(date);
-}
+String formatAmount(double value) => NumberFormat.currency(
+      locale: "pt_BR",
+      symbol: "R\$",
+      decimalDigits: 2,
+    ).format(value);
 
 int calculateMonthCount(startYear, startMonth, currentYear, currentMonth) =>
     (currentYear - startYear) * 12 + currentMonth - startMonth + 1;
@@ -31,7 +28,7 @@ String getMonthByNumber(value) => switch (value.toInt() % 12) {
     };
 
 String getCurrentMonth() {
-  var month = DateTime.now().month;
+  int month = DateTime.now().month;
 
   List months = [
     "JAN",
