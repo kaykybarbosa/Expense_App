@@ -192,6 +192,7 @@ class _Body extends StatelessWidget {
     final homeController = context.findAncestorStateOfType<HomePageState>()!.homeController;
 
     return Column(
+      spacing: 15,
       children: <Widget>[
         // Appbar
         CustomAppbar(
@@ -199,12 +200,10 @@ class _Body extends StatelessWidget {
           expensesFuture: homeController.calculateCurrentMonthExpenses(type: ExpenseType.expense),
         ),
 
-        const SizedBox(height: 15),
-
         // Bar graph
         _Graphic(),
 
-        const SizedBox(height: 25),
+        const SizedBox(height: 10),
 
         // Child
         child,
