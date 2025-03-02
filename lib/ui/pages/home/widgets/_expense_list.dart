@@ -25,8 +25,10 @@ class _ExpenseListState extends State<_ExpenseList> {
 
   @override
   Widget build(BuildContext context) {
-    final homeStateContext = context.findAncestorStateOfType<HomePageState>()!;
-    final homeController = homeStateContext.homeController;
+    final HomePageState homeStateContext =
+        context.findAncestorStateOfType<HomePageState>()!;
+    final HomeController homeController = homeStateContext.homeController;
+    final List<Expense> currentMonthExpenses = homeController.currentMonthExpenses;
 
     return Expanded(
       child: Scrollbar(
@@ -34,11 +36,10 @@ class _ExpenseListState extends State<_ExpenseList> {
         child: ListView.builder(
           controller: _scrollController,
           physics: const BouncingScrollPhysics(),
-          itemCount: homeController.currentMonthExpenses.length,
+          itemCount: currentMonthExpenses.length,
           itemBuilder: (_, index) {
-            final int reversedIndex =
-                homeController.currentMonthExpenses.length - index - 1;
-            final Expense expense = homeController.currentMonthExpenses[reversedIndex];
+            final int reversedIndex = currentMonthExpenses.length - index - 1;
+            final Expense expense = currentMonthExpenses[reversedIndex];
 
             return MyListTile(
               expense: expense,

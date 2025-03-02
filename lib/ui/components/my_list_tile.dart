@@ -1,8 +1,8 @@
 import 'package:expense_app/data/extensions/date_time_extension.dart';
+import 'package:expense_app/data/extensions/double_extension.dart';
 import 'package:expense_app/domain/models/expense.dart';
 import 'package:expense_app/ui/components/custom_container.dart';
 import 'package:expense_app/utils/constants.dart';
-import 'package:expense_app/utils/helper_functions.dart';
 import 'package:expense_app/utils/my_colors.dart';
 import 'package:expense_app/utils/my_icons.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +58,7 @@ class MyListTile extends StatelessWidget {
 
           /// Amount
           trailing: Text(
-            formatAmount(expense.amount),
+            expense.amount.formatAmount,
             style: TextStyle(
               fontSize: Constants.defaultFontSize,
               color: expense.type.color(context),

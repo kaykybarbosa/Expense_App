@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 export 'package:expense_app/domain/enums/expense_type.dart';
 
 class HomeController extends ChangeNotifier {
+  HomeController();
+
   final IExpenseDatabase _db = IExpenseDatabase.instance;
 
   final List<Expense> _expenses = [];
@@ -53,7 +55,7 @@ class HomeController extends ChangeNotifier {
           .toList();
 
   // Calculate current month total based on the given [type].
-  Future<double> calculateCurrentMonthExpenses({required ExpenseType type}) async {
+  double calculateCurrentMonthExpenses({required ExpenseType type}) {
     final now = DateTime.now();
     int currentMonth = now.month;
     int currentYear = now.year;
@@ -75,7 +77,7 @@ class HomeController extends ChangeNotifier {
 
   // Futures to load graph data & monthly total
   // create the list monthly summary
-  Future<List<Map<String, dynamic>>> monthlySummary() async {
+  List<Map<String, dynamic>> monthlySummary() {
     List<Expense> incomes = [];
     List<Expense> expenses = [];
 

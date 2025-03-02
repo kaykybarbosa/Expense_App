@@ -1,17 +1,16 @@
+import 'package:expense_app/data/extensions/date_time_extension.dart';
+import 'package:expense_app/data/extensions/string_extension.dart';
+import 'package:expense_app/dependency_injection/app_component.dart';
+import 'package:expense_app/domain/models/expense.dart';
 import 'package:expense_app/ui/components/barGraph/my_bar_graph.dart';
 import 'package:expense_app/ui/components/custom_button.dart';
 import 'package:expense_app/ui/components/my_list_tile.dart';
 import 'package:expense_app/ui/components/no_expense.dart';
-import 'package:expense_app/dependency_injection/app_component.dart';
-import 'package:expense_app/domain/models/expense.dart';
-import 'package:expense_app/data/extensions/date_time_extension.dart';
-import 'package:expense_app/data/extensions/string_extension.dart';
-import 'package:expense_app/utils/helper_functions.dart';
 import 'package:expense_app/ui/pages/home/home_controller.dart';
 import 'package:expense_app/ui/pages/home/widgets/custom_appbar.dart';
 import 'package:expense_app/ui/pages/home/widgets/custom_drawer.dart';
 import 'package:expense_app/ui/pages/home/widgets/custom_show_modal_bottom_sheet.dart';
-import 'package:expense_app/utils/my_colors.dart';
+import 'package:expense_app/utils/helper_functions.dart';
 import 'package:expense_app/utils/my_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
@@ -34,7 +33,45 @@ class HomePageState extends State<HomePage> {
   late final TextEditingController dateController;
   late final AdvancedDrawerController drawerController;
 
-  late HomeController homeController;
+  late final HomeController homeController;
+
+  @override
+  void initState() {
+    _initFormController();
+
+    drawerController = AdvancedDrawerController();
+
+    _initHomeController();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    amountController.dispose();
+    dateController.dispose();
+    drawerController.dispose();
+    super.dispose();
+  }
+
+  void _initFormController() {
+    nameController = TextEditingController();
+    amountController = TextEditingController();
+    dateController = TextEditingController();
+  }
+
+  void _initHomeController() {
+    homeController = getIt<HomeController>();
+    homeController.getAllExpenses();
+
+    /// TODO: Refatorar reatividade da interface.
+    homeController.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+  }
 
   void _cleanFormControllers() {
     nameController.clear();
@@ -133,36 +170,6 @@ class HomePageState extends State<HomePage> {
   }
 
   @override
-  void initState() {
-    nameController = TextEditingController();
-    amountController = TextEditingController();
-    dateController = TextEditingController();
-
-    drawerController = AdvancedDrawerController();
-
-    homeController = getIt<HomeController>();
-    homeController.getAllExpenses();
-
-    /// TODO:
-    homeController.addListener(() {
-      if (mounted) {
-        setState(() {});
-      }
-    });
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    nameController.dispose();
-    amountController.dispose();
-    dateController.dispose();
-    drawerController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) => AdvancedDrawer(
     openScale: .90,
     disabledGestures: true,
@@ -197,10 +204,10 @@ class _Body extends StatelessWidget {
       children: <Widget>[
         // Appbar
         CustomAppbar(
-          incomesFuture: homeController.calculateCurrentMonthExpenses(
+          subTotalIncomes: homeController.calculateCurrentMonthExpenses(
             type: ExpenseType.income,
           ),
-          expensesFuture: homeController.calculateCurrentMonthExpenses(
+          subTotalExpenses: homeController.calculateCurrentMonthExpenses(
             type: ExpenseType.expense,
           ),
         ),

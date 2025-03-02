@@ -1,3 +1,4 @@
+import 'package:expense_app/data/extensions/double_extension.dart';
 import 'package:expense_app/domain/enums/expense_type.dart';
 import 'package:expense_app/ui/pages/home/home_page.dart';
 import 'package:expense_app/utils/constants.dart';
@@ -7,100 +8,83 @@ import 'package:expense_app/utils/my_icons.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppbar extends StatelessWidget {
-  const CustomAppbar({super.key, this.incomesFuture, this.expensesFuture});
+  const CustomAppbar({
+    super.key,
+    required this.subTotalIncomes,
+    required this.subTotalExpenses,
+  });
 
-  final Future<double?>? incomesFuture;
-  final Future<double?>? expensesFuture;
+  final double subTotalIncomes;
+  final double subTotalExpenses;
 
   @override
   Widget build(BuildContext context) {
-    final homeContext = context.findAncestorStateOfType<HomePageState>()!;
+    final drawerController =
+        context.findAncestorStateOfType<HomePageState>()!.drawerController;
 
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: Constants.defaultMargin),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primaryContainer,
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Constants.defaultMargin),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            // AppBar
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  // -- Icon
-                  InkWell(
-                    onTap: () => homeContext.drawerController.showDrawer(),
-                    child: const Icon(MyIcons.menu, size: 28),
-                  ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          // AppBar
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                // -- Icon
+                InkWell(
+                  onTap: drawerController.showDrawer,
+                  child: const Icon(MyIcons.menu, size: 28),
+                ),
 
-                  // -- Current month
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        getCurrentMonth(),
-                        style: const TextStyle(
-                          fontSize: Constants.defaultFontSize + 4,
-                          fontWeight: FontWeight.w600,
-                        ),
+                // -- Current month
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      getCurrentMonth(),
+                      style: const TextStyle(
+                        fontSize: Constants.defaultFontSize + 4,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 22),
-                ],
-              ),
+                ),
+                const SizedBox(width: 22),
+              ],
             ),
+          ),
 
-            /// Incomes and Expenses
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-              child: Row(
-                spacing: 10,
-                children: <Widget>[
-                  /// Incomes
-                  Expanded(
-                    child: FutureBuilder(
-                      future: incomesFuture,
-                      builder: (_, snapshot) {
-                        String? total;
-
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          total = formatAmount(snapshot.data ?? 0);
-                        } else {
-                          total = '...';
-                        }
-
-                        return _DetailsExpense(type: ExpenseType.income, total: total);
-                      },
-                    ),
+          /// Incomes and Expenses
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            child: Row(
+              spacing: 10,
+              children: <Widget>[
+                /// Incomes
+                Expanded(
+                  child: _DetailsExpense(
+                    type: ExpenseType.income,
+                    total: subTotalIncomes.formatAmount,
                   ),
+                ),
 
-                  /// Expenses
-                  Expanded(
-                    child: FutureBuilder(
-                      future: expensesFuture,
-                      builder: (_, snapshot) {
-                        String? total;
-
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          total = formatAmount(snapshot.data ?? 0);
-                        } else {
-                          total = '...';
-                        }
-
-                        return _DetailsExpense(type: ExpenseType.expense, total: total);
-                      },
-                    ),
+                /// Expenses
+                Expanded(
+                  child: _DetailsExpense(
+                    type: ExpenseType.expense,
+                    total: subTotalExpenses.formatAmount,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
