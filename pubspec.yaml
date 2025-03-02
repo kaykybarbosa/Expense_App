@@ -6,7 +6,7 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.6.1
+  sdk: ^3.7.0
 
 dependencies:
   flutter:
@@ -28,10 +28,10 @@ dependencies:
   intl: ^0.20.1
 
   # Widget
-  flutter_slidable: ^3.0.1
+  flutter_slidable: ^4.0.0
 
   # BarGraph
-  fl_chart: ^0.69.0
+  fl_chart: ^0.70.2
 
   # Fonts
   google_fonts: ^6.2.1
