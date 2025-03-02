@@ -3,7 +3,7 @@ import 'package:expense_app/utils/my_icons.dart';
 import 'package:flutter/material.dart';
 
 enum ExpenseType {
-  income(label: 'Incomes', icon: MyIcons.arrowDown),
+  income(label: 'Incomes', icon: MyIcons.arrowUp),
   expense(label: 'Expenses', icon: MyIcons.arrowDown);
 
   const ExpenseType({required this.label, required this.icon});
