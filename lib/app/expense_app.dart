@@ -1,8 +1,10 @@
 import 'package:expense_app/app/routes/app_pages.dart';
 import 'package:expense_app/app/theme/app_theme.dart';
 import 'package:expense_app/dependency_injection/app_component.dart';
+import 'package:expense_app/dependency_injection/app_providers.dart';
 import 'package:expense_app/ui/pages/settings/controllers/theme_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ExpenseApp extends StatefulWidget {
   const ExpenseApp({super.key});
@@ -27,12 +29,15 @@ class _ExpenseAppState extends State<ExpenseApp> {
   }
 
   @override
-  Widget build(BuildContext context) => MaterialApp.router(
-    title: 'Expense App',
-    themeMode: _themeController.themeMode,
-    theme: AppTheme.light,
-    darkTheme: AppTheme.dark,
-    routerConfig: AppPages.pages,
-    debugShowCheckedModeBanner: false,
+  Widget build(BuildContext context) => MultiProvider(
+    providers: AppProviders.providers,
+    child: MaterialApp.router(
+      title: 'Expense App',
+      themeMode: _themeController.themeMode,
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      routerConfig: AppPages.pages,
+      debugShowCheckedModeBanner: false,
+    ),
   );
 }
