@@ -57,7 +57,7 @@ dependencies:
   objectbox_flutter_libs: any
 
   # Input formatter
-  mask_text_input_formatter: ^2.9.0
+  flutter_multi_formatter: ^2.11.3
 
 dev_dependencies:
   flutter_test:
