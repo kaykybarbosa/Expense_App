@@ -6,7 +6,7 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.5.3
+  sdk: ^3.6.1
 
 dependencies:
   flutter:
@@ -93,6 +93,5 @@ flutter_launcher_icons:
   image_path: "assets/icon_android.png"
   adaptive_icon_background: "#000000"
   adaptive_icon_foreground: "assets/icon_android.png"
-
 # dart run flutter_native_splash:create - Gerar splash screen
 # dart run flutter_launcher_icons - Gerar ícone
