@@ -1,7 +1,7 @@
-import 'package:expense_app/database/expense_database.dart';
+import 'package:expense_app/data/database/expense_database.dart';
 import 'package:expense_app/domain/enums/expense_type.dart';
 import 'package:expense_app/domain/models/expense.dart';
-import 'package:expense_app/helpers/helper_functions.dart';
+import 'package:expense_app/utils/helper_functions.dart';
 import 'package:flutter/material.dart';
 
 export 'package:expense_app/domain/enums/expense_type.dart';

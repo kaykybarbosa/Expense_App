@@ -1,9 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:expense_app/components/custom_text_field.dart';
+import 'package:expense_app/ui/components/custom_text_field.dart';
 import 'package:expense_app/domain/enums/expense_type.dart';
-import 'package:expense_app/extensions/date_time_extension.dart';
-import 'package:expense_app/extensions/string_extension.dart';
+import 'package:expense_app/data/extensions/date_time_extension.dart';
+import 'package:expense_app/data/extensions/string_extension.dart';
 import 'package:expense_app/utils/constants.dart';
 import 'package:expense_app/utils/input_formatter.dart';
 import 'package:expense_app/utils/my_icons.dart';

@@ -1,5 +1,5 @@
 import 'package:expense_app/app/routes/app_routes.dart';
-import 'package:expense_app/pages/home/home_page.dart';
+import 'package:expense_app/ui/pages/home/home_page.dart';
 import 'package:expense_app/utils/my_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

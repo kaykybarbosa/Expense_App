@@ -1,5 +1,5 @@
 import 'package:expense_app/app/routes/app_routes.dart';
-import 'package:expense_app/components/custom_container.dart';
+import 'package:expense_app/ui/components/custom_container.dart';
 import 'package:expense_app/utils/constants.dart';
 import 'package:expense_app/utils/my_icons.dart';
 import 'package:flutter/material.dart';

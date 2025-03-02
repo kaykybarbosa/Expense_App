@@ -1,8 +1,8 @@
 import 'package:expense_app/app/routes/app_routes.dart';
-import 'package:expense_app/pages/home/home_page.dart';
-import 'package:expense_app/pages/settings/settings_page.dart';
-import 'package:expense_app/pages/settings/sub_pages/app_info_page.dart';
-import 'package:expense_app/pages/settings/sub_pages/help_page.dart';
+import 'package:expense_app/ui/pages/home/home_page.dart';
+import 'package:expense_app/ui/pages/settings/settings_page.dart';
+import 'package:expense_app/ui/pages/settings/sub_pages/app_info_page.dart';
+import 'package:expense_app/ui/pages/settings/sub_pages/help_page.dart';
 import 'package:go_router/go_router.dart';
 
 class AppPages {

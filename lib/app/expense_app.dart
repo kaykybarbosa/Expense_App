@@ -1,7 +1,7 @@
 import 'package:expense_app/app/routes/app_pages.dart';
 import 'package:expense_app/app/theme/app_theme.dart';
 import 'package:expense_app/dependency_injection/app_component.dart';
-import 'package:expense_app/pages/settings/controllers/theme_controller.dart';
+import 'package:expense_app/ui/pages/settings/controllers/theme_controller.dart';
 import 'package:flutter/material.dart';
 
 class ExpenseApp extends StatefulWidget {

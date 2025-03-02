@@ -1,6 +1,6 @@
 import 'package:expense_app/domain/enums/expense_type.dart';
-import 'package:expense_app/helpers/helper_functions.dart';
-import 'package:expense_app/pages/home/home_page.dart';
+import 'package:expense_app/utils/helper_functions.dart';
+import 'package:expense_app/ui/pages/home/home_page.dart';
 import 'package:expense_app/utils/constants.dart';
 import 'package:expense_app/utils/my_colors.dart';
 import 'package:expense_app/utils/my_icons.dart';
