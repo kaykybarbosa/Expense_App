@@ -10,7 +10,7 @@ class _Graphic extends StatelessWidget {
     return SizedBox(
       height: 250,
       child: FutureBuilder(
-        future: homeController.monthlySummary(type: ExpenseType.expense),
+        future: homeController.monthlySummary(),
         builder: (_, snapshot) {
           // -- data loaded
           if (snapshot.connectionState == ConnectionState.done) {

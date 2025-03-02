@@ -56,9 +56,10 @@ class HomeController extends ChangeNotifier {
     int currentYear = now.year;
 
     List<Expense> currentMonthExpenses = _expenses
-        .where(
-          (expense) => expense.date.month == currentMonth && expense.date.year == currentYear && expense.type == type,
-        )
+        .where((expense) =>
+            expense.date.month == currentMonth &&
+            expense.date.year == currentYear && //
+            expense.type == type)
         .toList();
 
     double total = currentMonthExpenses.fold(0, (sum, expense) => sum + expense.amount);
@@ -68,7 +69,7 @@ class HomeController extends ChangeNotifier {
 
   // Futures to load graph data & monthly total
   // create the list monthly summary
-  Future<List<Map<String, dynamic>>> monthlySummary({required ExpenseType type}) async {
+  Future<List<Map<String, dynamic>>> monthlySummary() async {
     List<Expense> incomes = [];
     List<Expense> expenses = [];
 
