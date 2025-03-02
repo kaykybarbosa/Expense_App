@@ -63,12 +63,14 @@ void customShowModalButtomSheet(
                   /// -- Amount
                   CustomTextField(
                     label: 'Amount*',
+                    hintText: '0,00',
                     controller: amountController,
                     prefix: Text(
                       'R\$ ',
                       style: TextStyle(color: Theme.of(context).colorScheme.primary),
                     ),
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatter: InputFormatter.money,
                   ),
 
                   /// -- Date
