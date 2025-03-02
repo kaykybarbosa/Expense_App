@@ -1,9 +1,8 @@
-import 'package:expense_app/ui/components/custom_container.dart';
-import 'package:expense_app/domain/enums/expense_type.dart';
-import 'package:expense_app/domain/models/expense.dart';
 import 'package:expense_app/data/extensions/date_time_extension.dart';
-import 'package:expense_app/utils/helper_functions.dart';
+import 'package:expense_app/domain/models/expense.dart';
+import 'package:expense_app/ui/components/custom_container.dart';
 import 'package:expense_app/utils/constants.dart';
+import 'package:expense_app/utils/helper_functions.dart';
 import 'package:expense_app/utils/my_colors.dart';
 import 'package:expense_app/utils/my_icons.dart';
 import 'package:flutter/material.dart';
@@ -62,10 +61,7 @@ class MyListTile extends StatelessWidget {
             formatAmount(expense.amount),
             style: TextStyle(
               fontSize: Constants.defaultFontSize,
-              color:
-                  expense.type.isIncome
-                      ? MyColors.success
-                      : Theme.of(context).colorScheme.errorContainer,
+              color: expense.type.color(context),
             ),
           ),
         ),

@@ -1,6 +1,6 @@
+import 'package:expense_app/domain/enums/expense_type.dart';
 import 'package:expense_app/utils/constants.dart';
 import 'package:expense_app/utils/helper_functions.dart';
-import 'package:expense_app/utils/my_colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -140,8 +140,8 @@ class _MyBarGraphState extends State<MyBarGraph> {
                               borderRadius: BorderRadius.circular(Constants.borderRadius),
                               color:
                                   isIncome
-                                      ? MyColors.success
-                                      : Theme.of(context).colorScheme.errorContainer,
+                                      ? ExpenseType.income.color(context)
+                                      : ExpenseType.expense.color(context),
                               backDrawRodData: BackgroundBarChartRodData(
                                 show: true,
                                 toY: _calculateMax(),

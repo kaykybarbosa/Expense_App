@@ -12,15 +12,12 @@ class _ActionsButton extends StatelessWidget {
       children: <SpeedDialChild>[
         SpeedDialChild(
           onTap: () => homeContext._createExpense(type: ExpenseType.income),
-          child: Icon(MyIcons.trendingUp, color: MyColors.success),
+          child: Icon(MyIcons.trendingUp, color: ExpenseType.income.color(context)),
           label: 'Income',
         ),
         SpeedDialChild(
           onTap: homeContext._createExpense,
-          child: Icon(
-            MyIcons.trendingDown,
-            color: Theme.of(context).colorScheme.errorContainer,
-          ),
+          child: Icon(MyIcons.trendingDown, color: ExpenseType.expense.color(context)),
           label: 'Expense',
         ),
       ],

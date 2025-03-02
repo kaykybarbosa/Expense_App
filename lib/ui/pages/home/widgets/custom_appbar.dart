@@ -1,7 +1,7 @@
 import 'package:expense_app/domain/enums/expense_type.dart';
-import 'package:expense_app/utils/helper_functions.dart';
 import 'package:expense_app/ui/pages/home/home_page.dart';
 import 'package:expense_app/utils/constants.dart';
+import 'package:expense_app/utils/helper_functions.dart';
 import 'package:expense_app/utils/my_colors.dart';
 import 'package:expense_app/utils/my_icons.dart';
 import 'package:flutter/material.dart';
@@ -54,10 +54,12 @@ class CustomAppbar extends StatelessWidget {
                 ],
               ),
             ),
-            // Incomes and Expenses
+
+            /// Incomes and Expenses
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
               child: Row(
+                spacing: 10,
                 children: <Widget>[
                   /// Incomes
                   Expanded(
@@ -76,7 +78,6 @@ class CustomAppbar extends StatelessWidget {
                       },
                     ),
                   ),
-                  const SizedBox(width: 10),
 
                   /// Expenses
                   Expanded(
@@ -113,29 +114,26 @@ class _DetailsExpense extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        type.isIncome ? MyColors.success : Theme.of(context).colorScheme.errorContainer;
-
     return Row(
+      spacing: 10,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         // icon
         Container(
           decoration: BoxDecoration(
-            color: color,
+            color: type.color(context),
             borderRadius: BorderRadius.circular(30),
           ),
           padding: const EdgeInsets.all(6),
-          child: Icon(_icon(type), color: MyColors.base100),
+          child: Icon(type.icon, color: MyColors.base100),
         ),
-        const SizedBox(width: 10),
         // label
         Flexible(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                _label(type),
+                type.label,
                 style: const TextStyle(
                   color: MyColors.base300,
                   fontSize: Constants.defaultFontSize - 1,
@@ -144,7 +142,10 @@ class _DetailsExpense extends StatelessWidget {
               ),
               Text(
                 total ?? '0,00',
-                style: TextStyle(color: color, fontSize: Constants.defaultFontSize + 2),
+                style: TextStyle(
+                  color: type.color(context),
+                  fontSize: Constants.defaultFontSize + 2,
+                ),
               ),
             ],
           ),
@@ -153,13 +154,3 @@ class _DetailsExpense extends StatelessWidget {
     );
   }
 }
-
-IconData _icon(ExpenseType type) => switch (type) {
-  ExpenseType.income => MyIcons.arrowUp,
-  _ => MyIcons.arrowDown,
-};
-
-String _label(ExpenseType type) => switch (type) {
-  ExpenseType.income => 'Incomes',
-  _ => 'Expenses',
-};
