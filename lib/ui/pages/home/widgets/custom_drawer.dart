@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({
-    super.key,
-  });
+  const CustomDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +13,12 @@ class CustomDrawer extends StatelessWidget {
       {
         'title': 'HOME',
         'icon': MyIcons.home,
-        'onTap': () => context.findAncestorStateOfType<HomePageState>()?.drawerController.toggleDrawer(),
+        'onTap':
+            () =>
+                context
+                    .findAncestorStateOfType<HomePageState>()
+                    ?.drawerController
+                    .toggleDrawer(),
       },
       {
         'title': 'SETTINGS',
@@ -41,16 +44,17 @@ class CustomDrawer extends StatelessWidget {
 
           /// Options
           Column(
-            children: options
-                .map(
-                  (e) => ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-                    leading: Icon(e['icon']),
-                    title: Text(e['title']),
-                    onTap: e['onTap'],
-                  ),
-                )
-                .toList(),
+            children:
+                options
+                    .map(
+                      (e) => ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                        leading: Icon(e['icon']),
+                        title: Text(e['title']),
+                        onTap: e['onTap'],
+                      ),
+                    )
+                    .toList(),
           ),
         ],
       ),

@@ -23,56 +23,53 @@ class MyListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 5,
-          horizontal: Constants.defaultMargin,
-        ),
-        child: Slidable(
-          endActionPane: ActionPane(
-            motion: const StretchMotion(),
-            children: <Widget>[
-              SlidableAction(
-                icon: MyIcons.edit,
-                onPressed: onEditPressed,
-                backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-                foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                borderRadius: BorderRadius.circular(Constants.borderRadius),
-              ),
-              SlidableAction(
-                icon: MyIcons.delete,
-                onPressed: onDeletePressed,
-                backgroundColor: Theme.of(context).colorScheme.errorContainer,
-                foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                borderRadius: BorderRadius.circular(Constants.borderRadius),
-              ),
-            ],
+    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: Constants.defaultMargin),
+    child: Slidable(
+      endActionPane: ActionPane(
+        motion: const StretchMotion(),
+        children: <Widget>[
+          SlidableAction(
+            icon: MyIcons.edit,
+            onPressed: onEditPressed,
+            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
+            borderRadius: BorderRadius.circular(Constants.borderRadius),
           ),
-          child: CustomContainer(
-            margin: EdgeInsets.zero,
-            padding: EdgeInsets.zero,
-            child: ListTile(
-              /// Name
-              title: Text(expense.name),
+          SlidableAction(
+            icon: MyIcons.delete,
+            onPressed: onDeletePressed,
+            backgroundColor: Theme.of(context).colorScheme.errorContainer,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
+            borderRadius: BorderRadius.circular(Constants.borderRadius),
+          ),
+        ],
+      ),
+      child: CustomContainer(
+        margin: EdgeInsets.zero,
+        padding: EdgeInsets.zero,
+        child: ListTile(
+          /// Name
+          title: Text(expense.name),
 
-              /// Date
-              subtitle: Text(
-                expense.date.formatDate,
-                style: const TextStyle(
-                  color: MyColors.base300,
-                  fontSize: 13,
-                ),
-              ),
+          /// Date
+          subtitle: Text(
+            expense.date.formatDate,
+            style: const TextStyle(color: MyColors.base300, fontSize: 13),
+          ),
 
-              /// Amount
-              trailing: Text(
-                formatAmount(expense.amount),
-                style: TextStyle(
-                  fontSize: Constants.defaultFontSize,
-                  color: expense.type.isIncome ? MyColors.success : Theme.of(context).colorScheme.errorContainer,
-                ),
-              ),
+          /// Amount
+          trailing: Text(
+            formatAmount(expense.amount),
+            style: TextStyle(
+              fontSize: Constants.defaultFontSize,
+              color:
+                  expense.type.isIncome
+                      ? MyColors.success
+                      : Theme.of(context).colorScheme.errorContainer,
             ),
           ),
         ),
-      );
+      ),
+    ),
+  );
 }

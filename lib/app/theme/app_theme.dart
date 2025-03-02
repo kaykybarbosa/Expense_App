@@ -9,31 +9,31 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static ThemeData get light => ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.light,
-        colorScheme: EColorSchemeTheme.lightTheme,
-        shadowColor: MyColors.base300.withAlpha((.2 * 255).toInt()),
-        appBarTheme: EAppBarTheme.lightTheme,
-        textTheme: ETextTheme.lightTheme,
-        floatingActionButtonTheme: EFloatingActionButtonTheme.lightTheme,
-        dividerTheme: const DividerThemeData(color: MyColors.base100),
-        elevatedButtonTheme: EElevatedButtonTheme.lightTheme,
-        drawerTheme: EDrawerTheme.light,
-        scrollbarTheme: ScrollbarThemeData(
-          thumbColor: WidgetStatePropertyAll(MyColors.base300),
-        ),
-      );
+    useMaterial3: true,
+    brightness: Brightness.light,
+    colorScheme: EColorSchemeTheme.lightTheme,
+    shadowColor: MyColors.base300.withAlpha((.2 * 255).toInt()),
+    appBarTheme: EAppBarTheme.lightTheme,
+    textTheme: ETextTheme.lightTheme,
+    floatingActionButtonTheme: EFloatingActionButtonTheme.lightTheme,
+    dividerTheme: const DividerThemeData(color: MyColors.base100),
+    elevatedButtonTheme: EElevatedButtonTheme.lightTheme,
+    drawerTheme: EDrawerTheme.light,
+    scrollbarTheme: ScrollbarThemeData(
+      thumbColor: WidgetStatePropertyAll(MyColors.base300),
+    ),
+  );
 
   static ThemeData get dark => ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-        colorScheme: EColorSchemeTheme.darkTheme,
-        shadowColor: MyColors.base300.withAlpha((.1 * 255).toInt()),
-        appBarTheme: EAppBarTheme.darkTheme,
-        textTheme: ETextTheme.darkTheme,
-        floatingActionButtonTheme: EFloatingActionButtonTheme.darkTheme,
-        dividerTheme: const DividerThemeData(color: MyColors.darkBase100),
-        elevatedButtonTheme: EElevatedButtonTheme.darkTheme,
-        drawerTheme: EDrawerTheme.dark,
-      );
+    useMaterial3: true,
+    brightness: Brightness.dark,
+    colorScheme: EColorSchemeTheme.darkTheme,
+    shadowColor: MyColors.base300.withAlpha((.1 * 255).toInt()),
+    appBarTheme: EAppBarTheme.darkTheme,
+    textTheme: ETextTheme.darkTheme,
+    floatingActionButtonTheme: EFloatingActionButtonTheme.darkTheme,
+    dividerTheme: const DividerThemeData(color: MyColors.darkBase100),
+    elevatedButtonTheme: EElevatedButtonTheme.darkTheme,
+    drawerTheme: EDrawerTheme.dark,
+  );
 }

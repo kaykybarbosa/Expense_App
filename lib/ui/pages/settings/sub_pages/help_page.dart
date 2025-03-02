@@ -11,31 +11,28 @@ class HelpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> options = [
-      {
-        'leading': MyIcons.info,
-        'title': 'App info',
-      }
+      {'leading': MyIcons.info, 'title': 'App info'},
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('HELP'),
-      ),
+      appBar: AppBar(centerTitle: true, title: const Text('HELP')),
       body: Column(
-        children: options
-            .map((e) => CustomContainer(
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: Constants.defaultMargin,
+        children:
+            options
+                .map(
+                  (e) => CustomContainer(
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: Constants.defaultMargin,
+                    ),
+                    child: ListTile(
+                      leading: Icon(e['leading']),
+                      title: Text(e['title']),
+                      onTap: () => GoRouter.of(context).push(AppRoutes.appInfo),
+                    ),
                   ),
-                  child: ListTile(
-                    leading: Icon(e['leading']),
-                    title: Text(e['title']),
-                    onTap: () => GoRouter.of(context).push(AppRoutes.appInfo),
-                  ),
-                ))
-            .toList(),
+                )
+                .toList(),
       ),
     );
   }

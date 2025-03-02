@@ -2,7 +2,8 @@ import 'package:expense_app/domain/contracts/services/settings_service.dart';
 import 'package:flutter/material.dart';
 
 class ThemeController extends ChangeNotifier {
-  ThemeController({required ISettingsService settingsService}) : _service = settingsService;
+  ThemeController({required ISettingsService settingsService})
+    : _service = settingsService;
 
   final ISettingsService _service;
   ThemeMode _themeMode = ThemeMode.light;
@@ -16,7 +17,7 @@ class ThemeController extends ChangeNotifier {
   }
 
   Future<void> updadeAppTheme(bool isDark) async => {
-        await _service.setSettings(_service.settings.copyWith(isDark: isDark)),
-        getThemeMode(),
-      };
+    await _service.setSettings(_service.settings.copyWith(isDark: isDark)),
+    getThemeMode(),
+  };
 }

@@ -5,7 +5,8 @@ class _Graphic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final homeController = context.findAncestorStateOfType<HomePageState>()!.homeController;
+    final homeController =
+        context.findAncestorStateOfType<HomePageState>()!.homeController;
 
     return SizedBox(
       height: 250,

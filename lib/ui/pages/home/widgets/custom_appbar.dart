@@ -35,10 +35,7 @@ class CustomAppbar extends StatelessWidget {
                   // -- Icon
                   InkWell(
                     onTap: () => homeContext.drawerController.showDrawer(),
-                    child: const Icon(
-                      MyIcons.menu,
-                      size: 28,
-                    ),
+                    child: const Icon(MyIcons.menu, size: 28),
                   ),
 
                   // -- Current month
@@ -75,10 +72,7 @@ class CustomAppbar extends StatelessWidget {
                           total = '...';
                         }
 
-                        return _DetailsExpense(
-                          type: ExpenseType.income,
-                          total: total,
-                        );
+                        return _DetailsExpense(type: ExpenseType.income, total: total);
                       },
                     ),
                   ),
@@ -97,10 +91,7 @@ class CustomAppbar extends StatelessWidget {
                           total = '...';
                         }
 
-                        return _DetailsExpense(
-                          type: ExpenseType.expense,
-                          total: total,
-                        );
+                        return _DetailsExpense(type: ExpenseType.expense, total: total);
                       },
                     ),
                   ),
@@ -122,7 +113,8 @@ class _DetailsExpense extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = type.isIncome ? MyColors.success : Theme.of(context).colorScheme.errorContainer;
+    final color =
+        type.isIncome ? MyColors.success : Theme.of(context).colorScheme.errorContainer;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -134,10 +126,7 @@ class _DetailsExpense extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
           ),
           padding: const EdgeInsets.all(6),
-          child: Icon(
-            _icon(type),
-            color: MyColors.base100,
-          ),
+          child: Icon(_icon(type), color: MyColors.base100),
         ),
         const SizedBox(width: 10),
         // label
@@ -155,10 +144,7 @@ class _DetailsExpense extends StatelessWidget {
               ),
               Text(
                 total ?? '0,00',
-                style: TextStyle(
-                  color: color,
-                  fontSize: Constants.defaultFontSize + 2,
-                ),
+                style: TextStyle(color: color, fontSize: Constants.defaultFontSize + 2),
               ),
             ],
           ),
@@ -169,11 +155,11 @@ class _DetailsExpense extends StatelessWidget {
 }
 
 IconData _icon(ExpenseType type) => switch (type) {
-      ExpenseType.income => MyIcons.arrowUp,
-      _ => MyIcons.arrowDown,
-    };
+  ExpenseType.income => MyIcons.arrowUp,
+  _ => MyIcons.arrowDown,
+};
 
 String _label(ExpenseType type) => switch (type) {
-      ExpenseType.income => 'Incomes',
-      _ => 'Expenses',
-    };
+  ExpenseType.income => 'Incomes',
+  _ => 'Expenses',
+};

@@ -23,12 +23,7 @@ class CustomContainer extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(Constants.borderRadius),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: theme.shadowColor,
-            blurRadius: 5,
-          )
-        ],
+        boxShadow: <BoxShadow>[BoxShadow(color: theme.shadowColor, blurRadius: 5)],
       ),
       child: child,
     );

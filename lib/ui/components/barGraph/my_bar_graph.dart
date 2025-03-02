@@ -43,7 +43,10 @@ class _MyBarGraphState extends State<MyBarGraph> {
 
       return {
         'month': (widget.startMonth + index) - 1,
-        'summary': [monthlySummaryMap[_incomesKey] ?? 0.0, monthlySummaryMap[_expensesKey] ?? 0.0],
+        'summary': [
+          monthlySummaryMap[_incomesKey] ?? 0.0,
+          monthlySummaryMap[_expensesKey] ?? 0.0,
+        ],
       };
     });
   }
@@ -135,7 +138,10 @@ class _MyBarGraphState extends State<MyBarGraph> {
                               toY: value,
                               width: _kBarWidth,
                               borderRadius: BorderRadius.circular(Constants.borderRadius),
-                              color: isIncome ? MyColors.success : Theme.of(context).colorScheme.errorContainer,
+                              color:
+                                  isIncome
+                                      ? MyColors.success
+                                      : Theme.of(context).colorScheme.errorContainer,
                               backDrawRodData: BackgroundBarChartRodData(
                                 show: true,
                                 toY: _calculateMax(),
@@ -148,12 +154,16 @@ class _MyBarGraphState extends State<MyBarGraph> {
 
               barTouchData: BarTouchData(
                 touchTooltipData: BarTouchTooltipData(
-                  getTooltipColor: (_) => Theme.of(context).colorScheme.secondaryContainer,
+                  getTooltipColor:
+                      (_) => Theme.of(context).colorScheme.secondaryContainer,
                   tooltipHorizontalAlignment: FLHorizontalAlignment.right,
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     return BarTooltipItem(
                       '${rod.toY}',
-                      TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontWeight: FontWeight.w600),
+                      TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontWeight: FontWeight.w600,
+                      ),
                     );
                   },
                 ),

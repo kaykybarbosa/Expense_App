@@ -40,14 +40,17 @@ class HomeController extends ChangeNotifier {
   }
 
   // calculate the number of months since the first month
-  int monthCount() => calculateMonthCount(startYear, startMonth, currentYear, currentMonth);
+  int monthCount() =>
+      calculateMonthCount(startYear, startMonth, currentYear, currentMonth);
 
   // only display the expense for the current month
-  List<Expense> get currentMonthExpenses => _expenses
-      .where(
-        (expense) => expense.date.year == currentYear && expense.date.month == currentMonth,
-      )
-      .toList();
+  List<Expense> get currentMonthExpenses =>
+      _expenses
+          .where(
+            (expense) =>
+                expense.date.year == currentYear && expense.date.month == currentMonth,
+          )
+          .toList();
 
   // Calculate current month total based on the given [type].
   Future<double> calculateCurrentMonthExpenses({required ExpenseType type}) async {
@@ -55,12 +58,15 @@ class HomeController extends ChangeNotifier {
     int currentMonth = now.month;
     int currentYear = now.year;
 
-    List<Expense> currentMonthExpenses = _expenses
-        .where((expense) =>
-            expense.date.month == currentMonth &&
-            expense.date.year == currentYear && //
-            expense.type == type)
-        .toList();
+    List<Expense> currentMonthExpenses =
+        _expenses
+            .where(
+              (expense) =>
+                  expense.date.month == currentMonth &&
+                  expense.date.year == currentYear && //
+                  expense.type == type,
+            )
+            .toList();
 
     double total = currentMonthExpenses.fold(0, (sum, expense) => sum + expense.amount);
 
@@ -81,23 +87,24 @@ class HomeController extends ChangeNotifier {
       }
     }
 
-    Map<String, dynamic> monthlyTotalsIncomes = _calculateMonthlyTotals(expenses: incomes);
-    Map<String, dynamic> monthlyTotalsExpenses = _calculateMonthlyTotals(expenses: expenses);
-
-    return List.generate(
-      monthCount(),
-      (index) {
-        int year = startYear + (startMonth + index - 1) ~/ 12;
-        int month = (startMonth + index - 1) % 12 + 1;
-
-        String yearMonthKey = '$year-$month';
-
-        return {
-          'incomes': monthlyTotalsIncomes[yearMonthKey] ?? 0.0,
-          'expenses': monthlyTotalsExpenses[yearMonthKey] ?? 0.0,
-        };
-      },
+    Map<String, dynamic> monthlyTotalsIncomes = _calculateMonthlyTotals(
+      expenses: incomes,
     );
+    Map<String, dynamic> monthlyTotalsExpenses = _calculateMonthlyTotals(
+      expenses: expenses,
+    );
+
+    return List.generate(monthCount(), (index) {
+      int year = startYear + (startMonth + index - 1) ~/ 12;
+      int month = (startMonth + index - 1) % 12 + 1;
+
+      String yearMonthKey = '$year-$month';
+
+      return {
+        'incomes': monthlyTotalsIncomes[yearMonthKey] ?? 0.0,
+        'expenses': monthlyTotalsExpenses[yearMonthKey] ?? 0.0,
+      };
+    });
   }
 
   // calculate total expense for each month
@@ -127,17 +134,17 @@ class HomeController extends ChangeNotifier {
   }
 
   Future<void> addExpense(Expense expense) async => {
-        _db.createExpense(expense),
-        await getAllExpenses(),
-      };
+    _db.createExpense(expense),
+    await getAllExpenses(),
+  };
 
   Future<void> editExpense({required int id, required Expense expense}) async => {
-        _db.updateExpense(id: id, expense: expense),
-        await getAllExpenses(),
-      };
+    _db.updateExpense(id: id, expense: expense),
+    await getAllExpenses(),
+  };
 
   Future<void> deleteExpense(int id) async => {
-        _db.deleteExpense(id: id),
-        await getAllExpenses(),
-      };
+    _db.deleteExpense(id: id),
+    await getAllExpenses(),
+  };
 }

@@ -28,11 +28,11 @@ class _ExpenseAppState extends State<ExpenseApp> {
 
   @override
   Widget build(BuildContext context) => MaterialApp.router(
-        title: 'Expense App',
-        themeMode: _themeController.themeMode,
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        routerConfig: AppPages.pages,
-        debugShowCheckedModeBanner: false,
-      );
+    title: 'Expense App',
+    themeMode: _themeController.themeMode,
+    theme: AppTheme.light,
+    darkTheme: AppTheme.dark,
+    routerConfig: AppPages.pages,
+    debugShowCheckedModeBanner: false,
+  );
 }

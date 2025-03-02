@@ -14,11 +14,17 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialButton(
-        onPressed: () => onPressed(),
-        highlightColor: isDanger ? Theme.of(context).colorScheme.errorContainer.withAlpha((.3 * 255).toInt()) : null,
-        child: Text(
-          label,
-          style: isDanger ? TextStyle(color: Theme.of(context).colorScheme.errorContainer) : null,
-        ),
-      );
+    onPressed: () => onPressed(),
+    highlightColor:
+        isDanger
+            ? Theme.of(context).colorScheme.errorContainer.withAlpha((.3 * 255).toInt())
+            : null,
+    child: Text(
+      label,
+      style:
+          isDanger
+              ? TextStyle(color: Theme.of(context).colorScheme.errorContainer)
+              : null,
+    ),
+  );
 }

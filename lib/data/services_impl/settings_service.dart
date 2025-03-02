@@ -11,10 +11,8 @@ class SettingsService implements ISettingsService {
   final SharedPreferences _prefs;
 
   @override
-  Future<void> setSettings(SettingsModel settings) async => await _prefs.setString(
-        KEY,
-        settings.toJson(),
-      );
+  Future<void> setSettings(SettingsModel settings) async =>
+      await _prefs.setString(KEY, settings.toJson());
 
   @override
   SettingsModel get settings {

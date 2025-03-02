@@ -30,18 +30,18 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => TextField(
-        autofocus: isRequiredFocus,
-        controller: controller,
-        decoration: InputDecoration(
-          label: Text(label),
-          prefix: prefix,
-          suffixIcon: suffixIcon,
-          hintText: hintText,
-          hintStyle: TextStyle(color: MyColors.base300),
-        ),
-        keyboardType: keyboardType,
-        textInputAction: textInputAction,
-        textCapitalization: textCapitalization,
-        inputFormatters: inputFormatter != null ? [inputFormatter!] : [],
-      );
+    autofocus: isRequiredFocus,
+    controller: controller,
+    decoration: InputDecoration(
+      label: Text(label),
+      prefix: prefix,
+      suffixIcon: suffixIcon,
+      hintText: hintText,
+      hintStyle: TextStyle(color: MyColors.base300),
+    ),
+    keyboardType: keyboardType,
+    textInputAction: textInputAction,
+    textCapitalization: textCapitalization,
+    inputFormatters: inputFormatter != null ? [inputFormatter!] : [],
+  );
 }

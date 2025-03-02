@@ -24,103 +24,97 @@ void customShowModalButtomSheet(
   required TextEditingController dateController,
   ModalButtomSheetType buttomSheetType = ModalButtomSheetType.create,
   ExpenseType? expenseType,
-}) async =>
-    Future.delayed(
-      Duration.zero,
-      () {
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          builder: (context) => Container(
-            margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            padding: const EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: Constants.defaultMargin,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                /// Title
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: _Title(
-                    buttomSheetType: buttomSheetType,
-                    expenseType: expenseType ?? ExpenseType.expense,
-                  ),
-                ),
-
-                /// Form
-                Column(
-                  spacing: 10,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    /// -- Name
-                    CustomTextField(
-                      hintText: 'Name',
-                      label: 'Name',
-                      isRequiredFocus: buttomSheetType.isCreate,
-                      controller: nameController,
-                      textCapitalization: TextCapitalization.words,
-                    ),
-
-                    /// -- Amount
-                    CustomTextField(
-                      label: 'Amount',
-                      controller: amountController,
-                      prefix: Text(
-                        'R\$ ',
-                        style: TextStyle(color: Theme.of(context).colorScheme.primary),
-                      ),
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    ),
-
-                    /// -- Date
-                    CustomTextField(
-                      label: 'Date',
-                      hintText: 'dd/mm/yyyy',
-                      controller: dateController,
-                      suffixIcon: IconButton(
-                        onPressed: () async {
-                          final dateSelected = await showDatePicker(
-                            context: context,
-                            firstDate: DateTime(1900),
-                            initialDate: dateController.text.tryParse ?? DateTime.now(),
-                            lastDate: DateTime.now().add(Duration(days: 365)),
-                          );
-
-                          final date = dateSelected?.formatDate;
-                          if (date != null) {
-                            dateController.text = date;
-                          }
-                        },
-                        icon: Icon(MyIcons.calendar),
-                      ),
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.done,
-                      inputFormatter: InputFormatter.date,
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 30),
-
-                /// Save
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: onPressed,
-                    child: const Text('SAVE'),
-                  ),
-                ),
-
-                const SizedBox(height: 10),
-              ],
-            ),
+}) async => Future.delayed(Duration.zero, () {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+    builder:
+        (context) => Container(
+          margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding: const EdgeInsets.symmetric(
+            vertical: 10,
+            horizontal: Constants.defaultMargin,
           ),
-        );
-      },
-    );
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              /// Title
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: _Title(
+                  buttomSheetType: buttomSheetType,
+                  expenseType: expenseType ?? ExpenseType.expense,
+                ),
+              ),
+
+              /// Form
+              Column(
+                spacing: 10,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  /// -- Name
+                  CustomTextField(
+                    hintText: 'Name',
+                    label: 'Name',
+                    isRequiredFocus: buttomSheetType.isCreate,
+                    controller: nameController,
+                    textCapitalization: TextCapitalization.words,
+                  ),
+
+                  /// -- Amount
+                  CustomTextField(
+                    label: 'Amount',
+                    controller: amountController,
+                    prefix: Text(
+                      'R\$ ',
+                      style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                    ),
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  ),
+
+                  /// -- Date
+                  CustomTextField(
+                    label: 'Date',
+                    hintText: 'dd/mm/yyyy',
+                    controller: dateController,
+                    suffixIcon: IconButton(
+                      onPressed: () async {
+                        final dateSelected = await showDatePicker(
+                          context: context,
+                          firstDate: DateTime(1900),
+                          initialDate: dateController.text.tryParse ?? DateTime.now(),
+                          lastDate: DateTime.now().add(Duration(days: 365)),
+                        );
+
+                        final date = dateSelected?.formatDate;
+                        if (date != null) {
+                          dateController.text = date;
+                        }
+                      },
+                      icon: Icon(MyIcons.calendar),
+                    ),
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
+                    inputFormatter: InputFormatter.date,
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 30),
+
+              /// Save
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(onPressed: onPressed, child: const Text('SAVE')),
+              ),
+
+              const SizedBox(height: 10),
+            ],
+          ),
+        ),
+  );
+});
 
 class _Title extends StatelessWidget {
   const _Title({required this.buttomSheetType, required this.expenseType});
@@ -133,13 +127,7 @@ class _Title extends StatelessWidget {
     TextStyle style = const TextStyle(fontSize: Constants.largeFontSize);
 
     return buttomSheetType.isCreate
-        ? Text(
-            expenseType.isIncome ? 'New Income' : 'New Expense',
-            style: style,
-          )
-        : Text(
-            expenseType.isIncome ? 'Edit Income' : 'Edit Expense',
-            style: style,
-          );
+        ? Text(expenseType.isIncome ? 'New Income' : 'New Expense', style: style)
+        : Text(expenseType.isIncome ? 'Edit Income' : 'Edit Expense', style: style);
   }
 }

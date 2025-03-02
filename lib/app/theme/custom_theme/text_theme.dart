@@ -6,14 +6,10 @@ class ETextTheme {
   ETextTheme._();
 
   static TextTheme lightTheme = TextTheme(
-    bodyMedium: GoogleFonts.poppins(
-      fontSize: Constants.defaultFontSize,
-    ),
+    bodyMedium: GoogleFonts.poppins(fontSize: Constants.defaultFontSize),
   );
 
   static TextTheme darkTheme = TextTheme(
-    bodyMedium: GoogleFonts.poppins(
-      fontSize: Constants.defaultFontSize,
-    ),
+    bodyMedium: GoogleFonts.poppins(fontSize: Constants.defaultFontSize),
   );
 }

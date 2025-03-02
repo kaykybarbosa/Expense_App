@@ -28,48 +28,44 @@ class _SettingsPageState extends State<SettingsPage> {
     _themeController = getIt<ThemeController>();
 
     _controller.getSettings();
-    _controller.addListener(
-      () {
-        if (mounted) {
-          setState(() {});
-        }
-      },
-    );
+    _controller.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text('SETTINGS'),
-        ),
-        body: Column(
-          children: <Widget>[
-            CustomContainer(
-              margin: const EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: Constants.defaultMargin,
-              ),
-              child: ListTile(
-                leading: const Icon(MyIcons.moon),
-                title: const Text('Dark mode'),
-                trailing: CupertinoSwitch(
-                  value: _controller.settings.isDark,
-                  onChanged: (value) => {
+    appBar: AppBar(centerTitle: true, title: const Text('SETTINGS')),
+    body: Column(
+      children: <Widget>[
+        CustomContainer(
+          margin: const EdgeInsets.symmetric(
+            vertical: 10,
+            horizontal: Constants.defaultMargin,
+          ),
+          child: ListTile(
+            leading: const Icon(MyIcons.moon),
+            title: const Text('Dark mode'),
+            trailing: CupertinoSwitch(
+              value: _controller.settings.isDark,
+              onChanged:
+                  (value) => {
                     _controller.setSettings(_controller.settings.copyWith(isDark: value)),
                     _themeController.getThemeMode(),
                   },
-                ),
-              ),
             ),
-            CustomContainer(
-              child: ListTile(
-                title: const Text('Help'),
-                leading: const Icon(MyIcons.help),
-                onTap: () => GoRouter.of(context).push(AppRoutes.help),
-              ),
-            ),
-          ],
+          ),
         ),
-      );
+        CustomContainer(
+          child: ListTile(
+            title: const Text('Help'),
+            leading: const Icon(MyIcons.help),
+            onTap: () => GoRouter.of(context).push(AppRoutes.help),
+          ),
+        ),
+      ],
+    ),
+  );
 }

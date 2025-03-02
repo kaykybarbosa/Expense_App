@@ -3,7 +3,8 @@ import 'package:expense_app/domain/models/settings_model.dart';
 import 'package:flutter/material.dart';
 
 class SettingsController extends ChangeNotifier {
-  SettingsController({required ISettingsService settingsService}) : _service = settingsService;
+  SettingsController({required ISettingsService settingsService})
+    : _service = settingsService;
 
   final ISettingsService _service;
   SettingsModel _settings = SettingsModel();
@@ -17,7 +18,7 @@ class SettingsController extends ChangeNotifier {
   }
 
   Future<void> setSettings(SettingsModel settings) async => {
-        await _service.setSettings(settings),
-        getSettings(),
-      };
+    await _service.setSettings(settings),
+    getSettings(),
+  };
 }

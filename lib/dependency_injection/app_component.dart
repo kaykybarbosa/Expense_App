@@ -17,7 +17,9 @@ Future<void> configureDependencies() async {
   getIt.registerSingleton<Store>(store);
   getIt.registerSingleton<SharedPreferences>(sharedPrefs);
 
-  getIt.registerLazySingleton<IExpenseDatabase>(() => ExpenseDatabase(store: getIt<Store>()));
+  getIt.registerLazySingleton<IExpenseDatabase>(
+    () => ExpenseDatabase(store: getIt<Store>()),
+  );
 
   getIt.registerLazySingleton<ISettingsService>(
     () => SettingsService(sharedPrefs: getIt<SharedPreferences>()),

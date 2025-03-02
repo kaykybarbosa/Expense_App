@@ -36,19 +36,17 @@ class _ExpenseListState extends State<_ExpenseList> {
           physics: const BouncingScrollPhysics(),
           itemCount: homeController.currentMonthExpenses.length,
           itemBuilder: (_, index) {
-            final int reversedIndex = homeController.currentMonthExpenses.length - index - 1;
+            final int reversedIndex =
+                homeController.currentMonthExpenses.length - index - 1;
             final Expense expense = homeController.currentMonthExpenses[reversedIndex];
 
             return MyListTile(
               expense: expense,
-              onEditPressed: (context) => homeStateContext._editExpense(
-                expense,
-                type: expense.type,
-              ),
-              onDeletePressed: (context) => homeStateContext._deleteExpense(
-                expense.id,
-                type: expense.type,
-              ),
+              onEditPressed:
+                  (context) => homeStateContext._editExpense(expense, type: expense.type),
+              onDeletePressed:
+                  (context) =>
+                      homeStateContext._deleteExpense(expense.id, type: expense.type),
             );
           },
         ),

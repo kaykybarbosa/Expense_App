@@ -88,8 +88,14 @@ class HomePageState extends State<HomePage> {
 
           Expense newExpense = Expense(
             name: nameController.text.isNotEmpty ? nameController.text : expense.name,
-            amount: amountController.text.isNotEmpty ? convertToDouble(amountController.text) : expense.amount,
-            date: dateController.text.isNotEmpty ? (dateController.text.tryParse ?? expense.date) : expense.date,
+            amount:
+                amountController.text.isNotEmpty
+                    ? convertToDouble(amountController.text)
+                    : expense.amount,
+            date:
+                dateController.text.isNotEmpty
+                    ? (dateController.text.tryParse ?? expense.date)
+                    : expense.date,
             typeIndex: expense.type.index,
           );
 
@@ -106,30 +112,23 @@ class HomePageState extends State<HomePage> {
 
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text('Delete $typeName?'),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[],
-        ),
-        actions: <Widget>[
-          CustomButton(
-            label: 'Cancel',
-            onPressed: () => {
-              Navigator.pop(context),
-              _cleanFormControllers(),
-            },
+      builder:
+          (_) => AlertDialog(
+            title: Text('Delete $typeName?'),
+            content: const Column(mainAxisSize: MainAxisSize.min, children: <Widget>[]),
+            actions: <Widget>[
+              CustomButton(
+                label: 'Cancel',
+                onPressed: () => {Navigator.pop(context), _cleanFormControllers()},
+              ),
+              CustomButton(
+                isDanger: true,
+                label: 'Delete',
+                onPressed:
+                    () => {Navigator.pop(context), homeController.deleteExpense(id)},
+              ),
+            ],
           ),
-          CustomButton(
-            isDanger: true,
-            label: 'Delete',
-            onPressed: () => {
-              Navigator.pop(context),
-              homeController.deleteExpense(id),
-            },
-          )
-        ],
-      ),
     );
   }
 
@@ -165,21 +164,22 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) => AdvancedDrawer(
-        openScale: .90,
-        disabledGestures: true,
-        drawer: const CustomDrawer(),
-        controller: drawerController,
-        animationCurve: Curves.easeInOut,
-        backdrop: Container(color: Theme.of(context).shadowColor),
-        child: Scaffold(
-          floatingActionButton: const _ActionsButton(),
-          body: SafeArea(
-            child: homeController.currentMonthExpenses.isNotEmpty
+    openScale: .90,
+    disabledGestures: true,
+    drawer: const CustomDrawer(),
+    controller: drawerController,
+    animationCurve: Curves.easeInOut,
+    backdrop: Container(color: Theme.of(context).shadowColor),
+    child: Scaffold(
+      floatingActionButton: const _ActionsButton(),
+      body: SafeArea(
+        child:
+            homeController.currentMonthExpenses.isNotEmpty
                 ? _Body(child: _ExpenseList())
                 : SingleChildScrollView(child: _Body(child: NoExpense())),
-          ),
-        ),
-      );
+      ),
+    ),
+  );
 }
 
 class _Body extends StatelessWidget {
@@ -189,15 +189,20 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final homeController = context.findAncestorStateOfType<HomePageState>()!.homeController;
+    final homeController =
+        context.findAncestorStateOfType<HomePageState>()!.homeController;
 
     return Column(
       spacing: 15,
       children: <Widget>[
         // Appbar
         CustomAppbar(
-          incomesFuture: homeController.calculateCurrentMonthExpenses(type: ExpenseType.income),
-          expensesFuture: homeController.calculateCurrentMonthExpenses(type: ExpenseType.expense),
+          incomesFuture: homeController.calculateCurrentMonthExpenses(
+            type: ExpenseType.income,
+          ),
+          expensesFuture: homeController.calculateCurrentMonthExpenses(
+            type: ExpenseType.expense,
+          ),
         ),
 
         // Bar graph
