@@ -22,7 +22,7 @@ void customShowModalButtomSheet(
   required TextEditingController dateController,
   ModalButtomSheetType buttomSheetType = ModalButtomSheetType.create,
   ExpenseType? expenseType,
-}) async => Future.delayed(Duration.zero, () {
+}) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -105,7 +105,7 @@ void customShowModalButtomSheet(
 
               /// Save
               SizedBox(
-                width: double.infinity,
+                width: double.maxFinite,
                 child: ElevatedButton(onPressed: onPressed, child: const Text('SAVE')),
               ),
 
@@ -114,7 +114,7 @@ void customShowModalButtomSheet(
           ),
         ),
   );
-});
+}
 
 class _Title extends StatelessWidget {
   const _Title({required this.buttomSheetType, required this.expenseType});

@@ -16,8 +16,8 @@ class HomeController extends ChangeNotifier {
   List<Expense> get expenses => _expenses;
 
   // get dates
-  int currentMonth = DateTime.now().month;
-  int currentYear = DateTime.now().year;
+  int get _currentMonth => DateTime.now().month;
+  int get _currentYear => DateTime.now().year;
 
   // get start month
   int get startMonth {
@@ -42,15 +42,15 @@ class HomeController extends ChangeNotifier {
   }
 
   // calculate the number of months since the first month
-  int monthCount() =>
-      calculateMonthCount(startYear, startMonth, currentYear, currentMonth);
+  int get monthCount =>
+      calculateMonthCount(startYear, startMonth, _currentYear, _currentMonth);
 
   // only display the expense for the current month
   List<Expense> get currentMonthExpenses =>
       _expenses
           .where(
             (expense) =>
-                expense.date.year == currentYear && expense.date.month == currentMonth,
+                expense.date.year == _currentYear && expense.date.month == _currentMonth,
           )
           .toList();
 
@@ -89,14 +89,12 @@ class HomeController extends ChangeNotifier {
       }
     }
 
-    Map<String, dynamic> monthlyTotalsIncomes = _calculateMonthlyTotals(
-      expenses: incomes,
-    );
-    Map<String, dynamic> monthlyTotalsExpenses = _calculateMonthlyTotals(
+    Map<String, dynamic> monthlyTotalsIncomes = calculateMonthlyTotals(expenses: incomes);
+    Map<String, dynamic> monthlyTotalsExpenses = calculateMonthlyTotals(
       expenses: expenses,
     );
 
-    return List.generate(monthCount(), (index) {
+    return List.generate(monthCount, (index) {
       int year = startYear + (startMonth + index - 1) ~/ 12;
       int month = (startMonth + index - 1) % 12 + 1;
 
@@ -109,8 +107,24 @@ class HomeController extends ChangeNotifier {
     });
   }
 
-  // calculate total expense for each month
-  Map<String, double> _calculateMonthlyTotals({List<Expense> expenses = const []}) {
+  /// Calcula o total de despesas para cada mês com base na lista fornecida.
+  ///
+  /// - **Percorre a lista de despesas** e agrupa os valores por mês e ano.
+  /// - **Se o mês ainda não existir no mapa**, inicializa com zero.
+  /// - **Soma os valores das despesas do mesmo mês**, acumulando o total.
+  ///
+  /// ### Parâmetros:
+  /// - [expenses] → Lista de despesas a serem processadas. *(Padrão: lista vazia [])*
+  ///
+  /// ### Retorno:
+  /// - Retorna um `Map<String, double>`, onde a chave representa o **mês e ano (`YYYY-MM`)**
+  ///   e o valor representa o **total de despesas acumuladas** naquele período.
+  ///
+  /// ### Exemplo de Retorno:
+  /// ```dart
+  /// { "2024-01": 1200.50, "2024-02": 850.75 }
+  /// ```
+  Map<String, double> calculateMonthlyTotals({List<Expense> expenses = const []}) {
     Map<String, double> monthlyTotals = {};
 
     for (final expense in expenses) {

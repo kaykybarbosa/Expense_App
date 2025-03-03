@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 class MyBarGraph extends StatefulWidget {
   const MyBarGraph({super.key, required this.monthlySummary, required this.startMonth});
 
-  final List<Map<String, dynamic>> monthlySummary;
   final int startMonth;
+  final List<Map<String, dynamic>> monthlySummary;
 
   @override
   State<MyBarGraph> createState() => _MyBarGraphState();
@@ -39,7 +39,7 @@ class _MyBarGraphState extends State<MyBarGraph> {
 
   void _initializeBarData() {
     barData = List.generate(widget.monthlySummary.length, (index) {
-      final monthlySummaryMap = widget.monthlySummary[index];
+      final Map<String, dynamic> monthlySummaryMap = widget.monthlySummary[index];
 
       return {
         'month': (widget.startMonth + index) - 1,
@@ -52,8 +52,8 @@ class _MyBarGraphState extends State<MyBarGraph> {
   }
 
   double _calculateMax() {
-    const double max_ = 500;
-    double max = max_;
+    final double kMax = 500;
+    double max = kMax;
 
     List<double> amounts = [];
 
@@ -65,7 +65,7 @@ class _MyBarGraphState extends State<MyBarGraph> {
 
     max = amounts.last * 1.5;
 
-    if (max < max_) return max_;
+    if (max < kMax) return kMax;
 
     return max;
   }
@@ -151,7 +151,6 @@ class _MyBarGraphState extends State<MyBarGraph> {
                           }).toList(),
                     );
                   }).toList(),
-
               barTouchData: BarTouchData(
                 touchTooltipData: BarTouchTooltipData(
                   getTooltipColor:
