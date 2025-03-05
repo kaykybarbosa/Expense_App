@@ -4,6 +4,6 @@ import 'package:provider/single_child_widget.dart';
 
 abstract class AppProviders {
   static List<SingleChildWidget> providers = [
-    ChangeNotifierProvider(lazy: false, create: (_) => HomeController()),
+    ChangeNotifierProvider(create: (_) => HomeController.instance),
   ];
 }

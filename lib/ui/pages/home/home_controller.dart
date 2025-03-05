@@ -1,4 +1,5 @@
 import 'package:expense_app/data/database/expense_database.dart';
+import 'package:expense_app/dependency_injection/app_component.dart';
 import 'package:expense_app/domain/enums/expense_type.dart';
 import 'package:expense_app/domain/models/expense.dart';
 import 'package:expense_app/utils/helper_functions.dart';
@@ -7,11 +8,19 @@ import 'package:flutter/material.dart';
 export 'package:expense_app/domain/enums/expense_type.dart';
 
 class HomeController extends ChangeNotifier {
-  HomeController();
+  HomeController(IExpenseDatabase expenseDataBase) : _db = expenseDataBase;
 
-  final IExpenseDatabase _db = IExpenseDatabase.instance;
+  static HomeController get instance => getIt<HomeController>();
+
+  final IExpenseDatabase _db;
+
+  // P R O P S //
 
   final List<Expense> _expenses = [];
+
+  bool canScrollToEnd = true;
+
+  // G E T T E R S //
 
   List<Expense> get expenses => _expenses;
 
@@ -53,6 +62,8 @@ class HomeController extends ChangeNotifier {
                 expense.date.year == _currentYear && expense.date.month == _currentMonth,
           )
           .toList();
+
+  // M E T H O D S //
 
   // Calculate current month total based on the given [type].
   double calculateCurrentMonthExpenses({required ExpenseType type}) {
@@ -104,6 +115,38 @@ class HomeController extends ChangeNotifier {
         'incomes': monthlyTotalsIncomes[yearMonthKey] ?? 0.0,
         'expenses': monthlyTotalsExpenses[yearMonthKey] ?? 0.0,
       };
+    });
+  }
+
+  List<MonthlySummary> monthlySummary2() {
+    List<Expense> incomes = [];
+    List<Expense> expenses = [];
+
+    for (final expense in _expenses) {
+      if (expense.type.isIncome) {
+        incomes.add(expense);
+      } else {
+        expenses.add(expense);
+      }
+    }
+
+    Map<String, dynamic> monthlyTotalsIncomes = calculateMonthlyTotals(expenses: incomes);
+    Map<String, dynamic> monthlyTotalsExpenses = calculateMonthlyTotals(
+      expenses: expenses,
+    );
+
+    return List<MonthlySummary>.generate(monthCount, (index) {
+      int year = startYear + (startMonth + index - 1) ~/ 12;
+      int month = (startMonth + index - 1) % 12 + 1;
+
+      String yearMonthKey = '$year-$month';
+
+      return MonthlySummary(
+        year: year,
+        month: month,
+        incomes: monthlyTotalsIncomes[yearMonthKey] ?? 0.0,
+        expenses: monthlyTotalsExpenses[yearMonthKey] ?? 0.0,
+      );
     });
   }
 
@@ -164,3 +207,37 @@ class HomeController extends ChangeNotifier {
     await getAllExpenses(),
   };
 }
+
+class MonthlySummary {
+  MonthlySummary({
+    required this.year,
+    required this.month,
+    required this.incomes,
+    required this.expenses,
+  });
+
+  final int year;
+  final int month;
+  final double incomes;
+  final double expenses;
+
+  @override
+  String toString() => "Mês: $month/$year | Receitas: $incomes | Despesas: $expenses";
+}
+
+// class MonthlySummary {
+//   MonthlySummary({
+//     required this.monthlyTotalsIncomes,
+//     required this.monthlyTotalsExpenses,
+//   });
+
+//   final List<MonthlyInclude> monthlyTotalsIncomes;
+//   final List<MonthlyInclude> monthlyTotalsExpenses;
+// }
+
+// class MonthlyInclude {
+//   MonthlyInclude({required this.year, required this.ammount});
+
+//   final String year;
+//   final double ammount;
+// }
