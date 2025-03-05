@@ -1,4 +1,4 @@
-double convertToDouble(String value) => double.tryParse(value) ?? 0;
+
 
 int calculateMonthCount(startYear, startMonth, currentYear, currentMonth) =>
     (currentYear - startYear) * 12 + currentMonth - startMonth + 1;

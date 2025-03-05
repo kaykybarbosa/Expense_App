@@ -6,4 +6,6 @@ extension DoubleExtension on double {
     symbol: "R\$",
     decimalDigits: 2,
   ).format(this);
+
+  String get formatMoney => NumberFormat("#,##0.00", "pt_BR").format(this);
 }

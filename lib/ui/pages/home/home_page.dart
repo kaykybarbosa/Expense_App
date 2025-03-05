@@ -1,6 +1,7 @@
 import 'package:expense_app/data/extensions/date_time_extension.dart';
+import 'package:expense_app/data/extensions/double_extension.dart';
 import 'package:expense_app/data/extensions/string_extension.dart';
-import 'package:expense_app/dependency_injection/app_component.dart';
+import 'package:expense_app/domain/contracts/services/i_excel_service.dart';
 import 'package:expense_app/domain/models/expense.dart';
 import 'package:expense_app/ui/components/barGraph/my_bar_graph.dart';
 import 'package:expense_app/ui/components/custom_button.dart';
@@ -10,7 +11,6 @@ import 'package:expense_app/ui/pages/home/home_controller.dart';
 import 'package:expense_app/ui/pages/home/widgets/custom_appbar.dart';
 import 'package:expense_app/ui/pages/home/widgets/custom_drawer.dart';
 import 'package:expense_app/ui/pages/home/widgets/custom_show_modal_bottom_sheet.dart';
-import 'package:expense_app/utils/helper_functions.dart';
 import 'package:expense_app/utils/my_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
@@ -62,7 +62,7 @@ class HomePageState extends State<HomePage> {
   }
 
   void _initHomeController() {
-    homeController = getIt<HomeController>();
+    homeController = HomeController.instance;
     homeController.getAllExpenses();
 
     /// TODO: Refatorar reatividade da interface.
@@ -94,7 +94,7 @@ class HomePageState extends State<HomePage> {
 
           Expense expense = Expense(
             name: nameController.text,
-            amount: convertToDouble(amountController.text),
+            amount: amountController.text.unformatMoney,
             date: dateController.text.tryParse ?? DateTime.now(),
             typeIndex: type?.index ?? ExpenseType.expense.index,
           );
@@ -109,7 +109,7 @@ class HomePageState extends State<HomePage> {
 
   void _editExpense(Expense expense, {ExpenseType? type}) {
     nameController.text = expense.name;
-    amountController.text = expense.amount.toString();
+    amountController.text = expense.amount.formatMoney;
     dateController.text = expense.date.formatDate;
 
     customShowModalButtomSheet(
@@ -127,7 +127,7 @@ class HomePageState extends State<HomePage> {
             name: nameController.text.isNotEmpty ? nameController.text : expense.name,
             amount:
                 amountController.text.isNotEmpty
-                    ? convertToDouble(amountController.text)
+                    ? amountController.text.unformatMoney
                     : expense.amount,
             date:
                 dateController.text.isNotEmpty
@@ -219,6 +219,13 @@ class _Body extends StatelessWidget {
 
         // Child
         child,
+
+        IconButton(
+          onPressed: () {
+            IExcelService.instance.create();
+          },
+          icon: Icon(MyIcons.add),
+        ),
       ],
     );
   }
