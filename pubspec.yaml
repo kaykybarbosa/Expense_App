@@ -22,7 +22,8 @@ dependencies:
 
   # Provider
   provider: ^6.1.2
-  path_provider: ^2.1.2
+  path_provider: ^2.1.5
+  path: ^1.9.1
 
   # Intl
   intl: ^0.20.1
@@ -58,6 +59,9 @@ dependencies:
 
   # Input formatter
   flutter_multi_formatter: ^2.11.3
+
+  # Export and Inport Excel
+  excel: ^4.0.6
 
 dev_dependencies:
   flutter_test:
