@@ -36,7 +36,11 @@ class ExpenseDatabase implements IExpenseDatabase {
   List<Expense> get getAllExpenses {
     final expenseBox = store.box<Expense>();
 
-    return expenseBox.getAll();
+    final query = expenseBox.query().order(Expense_.date).build();
+    final List<Expense> allExpenses = query.find();
+    query.close();
+
+    return allExpenses;
   }
 
   // Create - add a new expense
