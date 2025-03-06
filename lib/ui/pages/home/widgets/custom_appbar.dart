@@ -1,12 +1,12 @@
 import 'package:expense_app/data/extensions/double_extension.dart';
-import 'package:expense_app/domain/contracts/services/i_excel_service.dart';
-import 'package:expense_app/domain/enums/expense_type.dart';
+import 'package:expense_app/ui/pages/home/home_controller.dart';
 import 'package:expense_app/ui/pages/home/home_page.dart';
 import 'package:expense_app/utils/constants.dart';
 import 'package:expense_app/utils/helper_functions.dart';
 import 'package:expense_app/utils/my_colors.dart';
 import 'package:expense_app/utils/my_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CustomAppbar extends StatelessWidget {
   const CustomAppbar({
@@ -60,25 +60,33 @@ class CustomAppbar extends StatelessWidget {
                 ),
 
                 // -- Export excel
-                Tooltip(
-                  message:
-                      homeController.expenses.isNotEmpty
-                          ? 'Expense report'
-                          : 'No expenses recorded',
-                  child: InkWell(
-                    onTap: () async {
-                      final excelService = IExcelService.instance;
+                Consumer<HomeController>(
+                  builder: (_, _, _) {
+                    final bool expensesIsNotEmpty = homeController.expenses.isNotEmpty;
 
-                      final file = await excelService.createExpenseReport();
-
-                      if (file != null) await excelService.openExpenseReport(file);
-                    },
-                    child: Icon(
-                      MyIcons.excel,
-                      size: 24,
-                      color: homeController.expenses.isEmpty ? MyColors.base300 : null,
-                    ),
-                  ),
+                    return Tooltip(
+                      message:
+                          expensesIsNotEmpty ? 'Expense report' : 'No expenses recorded',
+                      child: InkWell(
+                        onTap: expensesIsNotEmpty ? homeController.expenseReport : null,
+                        child:
+                            homeController.expenseReportLoading
+                                ? SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(),
+                                )
+                                : Icon(
+                                  MyIcons.excel,
+                                  size: 24,
+                                  color:
+                                      homeController.expenses.isEmpty
+                                          ? MyColors.base300
+                                          : null,
+                                ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
