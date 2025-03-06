@@ -1,4 +1,5 @@
 import 'package:expense_app/data/extensions/double_extension.dart';
+import 'package:expense_app/domain/contracts/services/i_excel_service.dart';
 import 'package:expense_app/domain/enums/expense_type.dart';
 import 'package:expense_app/ui/pages/home/home_page.dart';
 import 'package:expense_app/utils/constants.dart';
@@ -22,6 +23,9 @@ class CustomAppbar extends StatelessWidget {
     final drawerController =
         context.findAncestorStateOfType<HomePageState>()!.drawerController;
 
+    final homeController =
+        context.findAncestorStateOfType<HomePageState>()!.homeController;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: Constants.defaultMargin),
       decoration: BoxDecoration(
@@ -35,27 +39,47 @@ class CustomAppbar extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 // -- Icon
-                InkWell(
-                  onTap: drawerController.showDrawer,
-                  child: const Icon(MyIcons.menu, size: 28),
+                Tooltip(
+                  message: 'Menu',
+                  child: InkWell(
+                    onTap: drawerController.showDrawer,
+                    child: const Icon(MyIcons.menu, size: 28),
+                  ),
                 ),
 
                 // -- Current month
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      getCurrentMonth(),
-                      style: const TextStyle(
-                        fontSize: Constants.defaultFontSize + 4,
-                        fontWeight: FontWeight.w600,
-                      ),
+                Text(
+                  getCurrentMonth(),
+                  style: const TextStyle(
+                    fontSize: Constants.defaultFontSize + 4,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+
+                // -- Export excel
+                Tooltip(
+                  message:
+                      homeController.expenses.isNotEmpty
+                          ? 'Expense report'
+                          : 'No expenses recorded',
+                  child: InkWell(
+                    onTap: () async {
+                      final excelService = IExcelService.instance;
+
+                      final file = await excelService.createExpenseReport();
+
+                      if (file != null) await excelService.openExpenseReport(file);
+                    },
+                    child: Icon(
+                      MyIcons.excel,
+                      size: 24,
+                      color: homeController.expenses.isEmpty ? MyColors.base300 : null,
                     ),
                   ),
                 ),
-                const SizedBox(width: 22),
               ],
             ),
           ),
