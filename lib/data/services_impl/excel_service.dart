@@ -9,40 +9,41 @@ import 'package:expense_app/domain/models/monthly_summary.dart';
 import 'package:expense_app/ui/pages/home/home_controller.dart';
 import 'package:expense_app/utils/helper_functions.dart';
 import 'package:expense_app/utils/my_colors.dart';
+import 'package:external_path/external_path.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 class ExcelService implements IExcelService {
-  ExcelService({required this.homeController});
-
-  final HomeController homeController;
+  ExcelService();
 
   @override
-  Future<void> openExpenseReport(File file) async {
-    try {
-      await OpenFile.open(file.path);
-    } catch (_) {}
-  }
+  Future<void> openExpenseReport(File file) async => await OpenFile.open(file.path);
 
   @override
-  Future<File?> createExpenseReport() async {
-    // Initialize excel
-    final Excel excel = Excel.createExcel();
+  Future<File?> createExpenseReport({
+    required List<MonthlySummary> monthlySummary,
+    required List<Expense> expenses,
+  }) async {
+    // Variables //
+    final ExcelColor incomeColorHex = ExcelColor.fromHexString(MyColors.successHex);
+    final ExcelColor expenseColorHex = ExcelColor.fromHexString(MyColors.warnHex);
     final CellStyle cellStyle = CellStyle(
       bold: true,
       horizontalAlign: HorizontalAlign.Center,
     );
 
-    final List<MonthlySummary> monthlySummary = homeController.monthlySummary();
+    // Initialize excel
+    final Excel excel = Excel.createExcel();
 
     for (final monthly in monthlySummary) {
       // Expenses
       List<Expense> currentExpenses =
-          homeController.expenses
+          expenses
               .where((e) => e.date.month == monthly.month && e.date.year == monthly.year)
               .toList();
 
+      // Skipping empty expenses
       if (currentExpenses.isEmpty) continue;
 
       // Sheet
@@ -59,9 +60,7 @@ class ExcelService implements IExcelService {
         ..cellStyle = cellStyle;
       sheet.cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: 2))
         ..value = TextCellValue(incomesSubTotal.formatAmount)
-        ..cellStyle = cellStyle.copyWith(
-          fontColorHexVal: ExcelColor.fromHexString(MyColors.successHex),
-        );
+        ..cellStyle = cellStyle.copyWith(fontColorHexVal: incomeColorHex);
 
       // Expenses subtotal
       final double expenseSubTotal = _calculateExpenses(
@@ -73,9 +72,7 @@ class ExcelService implements IExcelService {
         ..cellStyle = cellStyle;
       sheet.cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: 2))
         ..value = TextCellValue(expenseSubTotal.formatAmount)
-        ..cellStyle = cellStyle.copyWith(
-          fontColorHexVal: ExcelColor.fromHexString(MyColors.warnHex),
-        );
+        ..cellStyle = cellStyle.copyWith(fontColorHexVal: expenseColorHex);
 
       // Sheet header
       sheet.cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: 4))
@@ -107,9 +104,7 @@ class ExcelService implements IExcelService {
         sheet
             .cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: rowIndex))
             .cellStyle = CellStyle(
-          fontColorHex: ExcelColor.fromHexString(
-            (expense.type.isIncome ? MyColors.successHex : MyColors.warnHex),
-          ),
+          fontColorHex: expense.type.isIncome ? incomeColorHex : expenseColorHex,
         );
 
         // -- Date style
@@ -129,14 +124,21 @@ class ExcelService implements IExcelService {
   }
 
   Future<File?> _saveExcel(List<int>? fileBytes) async {
-    final Directory? directory =
-        Platform.isAndroid
-            ? await getDownloadsDirectory()
-            : await getApplicationDocumentsDirectory();
+    String directoryPath;
+
+    if (Platform.isAndroid) {
+      directoryPath = await ExternalPath.getExternalStoragePublicDirectory(
+        ExternalPath.DIRECTORY_DOWNLOAD,
+      );
+    } else {
+      final Directory directory = await getApplicationDocumentsDirectory();
+
+      directoryPath = directory.path;
+    }
 
     if (fileBytes != null) {
       final File file =
-          File(p.join('${directory?.path}/expenses.xlsx'))
+          File(p.join(directoryPath, 'expenses.xlsx'))
             ..createSync(recursive: true)
             ..writeAsBytesSync(fileBytes);
 
