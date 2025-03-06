@@ -28,4 +28,7 @@ class MyColors {
 
   static const Color success = Color(0xFF4fc951);
   static const Color warn = Color(0xFFE0252B);
+
+  static const String successHex = '#4FC951';
+  static const String warnHex = '#E0252B';
 }

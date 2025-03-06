@@ -21,4 +21,5 @@ class MyIcons {
   static const IconData trendingDown = HeroIcons.arrow_trending_down;
   static const IconData edit = HeroIcons.pencil;
   static const IconData calendar = HeroIcons.calendar;
+  static const IconData excel = FontAwesome.file_excel;
 }
