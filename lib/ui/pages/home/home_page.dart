@@ -91,10 +91,11 @@ class HomePageState extends State<HomePage> {
         if (nameController.text.isNotEmpty && amountController.text.isNotEmpty) {
           Navigator.pop(context);
 
+          final DateTime now = DateTime.now();
           Expense expense = Expense(
             name: nameController.text,
             amount: amountController.text.unformatMoney,
-            date: dateController.text.tryParse ?? DateTime.now(),
+            date: dateController.text.tryParse ?? DateTime(now.year, now.month, now.day),
             typeIndex: type?.index ?? ExpenseType.expense.index,
           );
 
