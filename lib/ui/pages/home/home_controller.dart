@@ -1,5 +1,6 @@
 import 'package:expense_app/data/database/expense_database.dart';
 import 'package:expense_app/dependency_injection/app_component.dart';
+import 'package:expense_app/domain/contracts/services/i_excel_service.dart';
 import 'package:expense_app/domain/enums/expense_type.dart';
 import 'package:expense_app/domain/models/expense.dart';
 import 'package:expense_app/domain/models/monthly_summary.dart';
@@ -9,21 +10,24 @@ import 'package:flutter/material.dart';
 export 'package:expense_app/domain/enums/expense_type.dart';
 
 class HomeController extends ChangeNotifier {
-  HomeController(IExpenseDatabase expenseDataBase) : _db = expenseDataBase;
+  HomeController({required IExpenseDatabase expenseDataBase, required this.excelService})
+    : _db = expenseDataBase;
 
   static HomeController get instance => getIt<HomeController>();
 
   final IExpenseDatabase _db;
+  final IExcelService excelService;
 
   // P R O P S //
 
   final List<Expense> _expenses = [];
-
-  bool canScrollToEnd = true;
+  bool _expenseReportLoading = false;
 
   // G E T T E R S //
 
   List<Expense> get expenses => _expenses;
+
+  bool get expenseReportLoading => _expenseReportLoading;
 
   // get dates
   int get _currentMonth => DateTime.now().month;
@@ -63,6 +67,13 @@ class HomeController extends ChangeNotifier {
                 expense.date.year == _currentYear && expense.date.month == _currentMonth,
           )
           .toList();
+
+  // S E T T E R S //
+
+  set expenseReportLoading(bool value) {
+    _expenseReportLoading = value;
+    notifyListeners();
+  }
 
   // M E T H O D S //
 
@@ -193,4 +204,16 @@ class HomeController extends ChangeNotifier {
     _db.deleteExpense(id: id),
     await getAllExpenses(),
   };
+
+  Future<void> expenseReport() async {
+    expenseReportLoading = true;
+    final file = await excelService.createExpenseReport(
+      expenses: _expenses,
+      monthlySummary: monthlySummary(),
+    );
+
+    if (file != null) await excelService.openExpenseReport(file);
+
+    expenseReportLoading = false;
+  }
 }

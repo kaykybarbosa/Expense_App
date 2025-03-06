@@ -26,12 +26,14 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<ISettingsService>(
     () => SettingsService(sharedPrefs: getIt<SharedPreferences>()),
   );
+  getIt.registerLazySingleton<IExcelService>(() => ExcelService());
 
   getIt.registerLazySingleton<HomeController>(
-    () => HomeController(getIt<IExpenseDatabase>()),
+    () => HomeController(
+      expenseDataBase: getIt<IExpenseDatabase>(),
+      excelService: IExcelService.instance,
+    ),
   );
   getIt.registerSingleton(SettingsController(settingsService: ISettingsService.instance));
   getIt.registerSingleton(ThemeController(settingsService: ISettingsService.instance));
-
-  getIt.registerLazySingleton<IExcelService>(() => ExcelService(homeController: getIt()));
 }
