@@ -6,4 +6,10 @@ extension DateTimeExtension on DateTime {
 
     return format.format(this);
   }
+
+  String get formatDate2 {
+    final format = DateFormat('dd/MM/yy');
+
+    return format.format(this);
+  }
 }
