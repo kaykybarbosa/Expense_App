@@ -2,6 +2,7 @@ import 'package:expense_app/data/database/expense_database.dart';
 import 'package:expense_app/dependency_injection/app_component.dart';
 import 'package:expense_app/domain/enums/expense_type.dart';
 import 'package:expense_app/domain/models/expense.dart';
+import 'package:expense_app/domain/models/monthly_summary.dart';
 import 'package:expense_app/utils/helper_functions.dart';
 import 'package:flutter/material.dart';
 
@@ -86,39 +87,25 @@ class HomeController extends ChangeNotifier {
     return total;
   }
 
-  // Futures to load graph data & monthly total
-  // create the list monthly summary
-  List<Map<String, dynamic>> monthlySummary() {
-    List<Expense> incomes = [];
-    List<Expense> expenses = [];
-
-    for (final expense in _expenses) {
-      if (expense.type.isIncome) {
-        incomes.add(expense);
-      } else {
-        expenses.add(expense);
-      }
-    }
-
-    Map<String, dynamic> monthlyTotalsIncomes = calculateMonthlyTotals(expenses: incomes);
-    Map<String, dynamic> monthlyTotalsExpenses = calculateMonthlyTotals(
-      expenses: expenses,
-    );
-
-    return List.generate(monthCount, (index) {
-      int year = startYear + (startMonth + index - 1) ~/ 12;
-      int month = (startMonth + index - 1) % 12 + 1;
-
-      String yearMonthKey = '$year-$month';
-
-      return {
-        'incomes': monthlyTotalsIncomes[yearMonthKey] ?? 0.0,
-        'expenses': monthlyTotalsExpenses[yearMonthKey] ?? 0.0,
-      };
-    });
-  }
-
-  List<MonthlySummary> monthlySummary2() {
+  /// Gera uma lista contendo o resumo mensal de receitas e despesas.
+  ///
+  /// - **Filtra e separa as despesas da lista `_expenses`** em rendimentos (`incomes`) e despesas (`expenses`).
+  /// - **Calcula o total mensal de rendimentos e despesas**.
+  /// - **Gera uma lista de objetos `MonthlySummary`**, onde cada item representa um mês e contém
+  ///   o total de rendimentos e despesas acumuladas.
+  ///
+  /// ### Retorno:
+  /// - Retorna uma **lista de `MonthlySummary`**, contendo o total de rendimentos (`income`) e despesas (`expense`)
+  ///   para cada mês.
+  ///
+  /// ### Exemplo de Retorno:
+  /// ```dart
+  /// [
+  ///   MonthlySummary(year: 2024, month: 1, income: 1500.00, expense: 800.00),
+  ///   MonthlySummary(year: 2024, month: 2, income: 2000.00, expense: 1200.00),
+  /// ]
+  /// ```
+  List<MonthlySummary> monthlySummary() {
     List<Expense> incomes = [];
     List<Expense> expenses = [];
 
@@ -144,8 +131,8 @@ class HomeController extends ChangeNotifier {
       return MonthlySummary(
         year: year,
         month: month,
-        incomes: monthlyTotalsIncomes[yearMonthKey] ?? 0.0,
-        expenses: monthlyTotalsExpenses[yearMonthKey] ?? 0.0,
+        income: monthlyTotalsIncomes[yearMonthKey] ?? 0.0,
+        expense: monthlyTotalsExpenses[yearMonthKey] ?? 0.0,
       );
     });
   }
@@ -207,37 +194,3 @@ class HomeController extends ChangeNotifier {
     await getAllExpenses(),
   };
 }
-
-class MonthlySummary {
-  MonthlySummary({
-    required this.year,
-    required this.month,
-    required this.incomes,
-    required this.expenses,
-  });
-
-  final int year;
-  final int month;
-  final double incomes;
-  final double expenses;
-
-  @override
-  String toString() => "Mês: $month/$year | Receitas: $incomes | Despesas: $expenses";
-}
-
-// class MonthlySummary {
-//   MonthlySummary({
-//     required this.monthlyTotalsIncomes,
-//     required this.monthlyTotalsExpenses,
-//   });
-
-//   final List<MonthlyInclude> monthlyTotalsIncomes;
-//   final List<MonthlyInclude> monthlyTotalsExpenses;
-// }
-
-// class MonthlyInclude {
-//   MonthlyInclude({required this.year, required this.ammount});
-
-//   final String year;
-//   final double ammount;
-// }

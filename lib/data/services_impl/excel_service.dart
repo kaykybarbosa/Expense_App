@@ -5,6 +5,7 @@ import 'package:expense_app/data/extensions/date_time_extension.dart';
 import 'package:expense_app/data/extensions/double_extension.dart';
 import 'package:expense_app/domain/contracts/services/i_excel_service.dart';
 import 'package:expense_app/domain/models/expense.dart';
+import 'package:expense_app/domain/models/monthly_summary.dart';
 import 'package:expense_app/ui/pages/home/home_controller.dart';
 import 'package:expense_app/utils/helper_functions.dart';
 import 'package:expense_app/utils/my_colors.dart';
@@ -33,7 +34,7 @@ class ExcelService implements IExcelService {
       horizontalAlign: HorizontalAlign.Center,
     );
 
-    final List<MonthlySummary> monthlySummary = homeController.monthlySummary2();
+    final List<MonthlySummary> monthlySummary = homeController.monthlySummary();
 
     for (final monthly in monthlySummary) {
       // Expenses

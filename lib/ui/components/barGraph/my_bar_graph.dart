@@ -1,4 +1,5 @@
-import 'package:expense_app/domain/enums/expense_type.dart';
+import 'package:expense_app/domain/models/monthly_summary.dart';
+import 'package:expense_app/ui/pages/home/home_controller.dart';
 import 'package:expense_app/utils/constants.dart';
 import 'package:expense_app/utils/helper_functions.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -8,15 +9,13 @@ class MyBarGraph extends StatefulWidget {
   const MyBarGraph({super.key, required this.monthlySummary, required this.startMonth});
 
   final int startMonth;
-  final List<Map<String, dynamic>> monthlySummary;
+  final List<MonthlySummary> monthlySummary;
 
   @override
   State<MyBarGraph> createState() => _MyBarGraphState();
 }
 
 class _MyBarGraphState extends State<MyBarGraph> {
-  final String _incomesKey = 'incomes';
-  final String _expensesKey = 'expenses';
   final double _kBarWidth = 20;
   final double _kSpaceBetweenBars = 75;
   List<Map<String, dynamic>> barData = [];
@@ -39,14 +38,11 @@ class _MyBarGraphState extends State<MyBarGraph> {
 
   void _initializeBarData() {
     barData = List.generate(widget.monthlySummary.length, (index) {
-      final Map<String, dynamic> monthlySummaryMap = widget.monthlySummary[index];
+      final monthlySummary = widget.monthlySummary[index];
 
       return {
         'month': (widget.startMonth + index) - 1,
-        'summary': [
-          monthlySummaryMap[_incomesKey] ?? 0.0,
-          monthlySummaryMap[_expensesKey] ?? 0.0,
-        ],
+        'summary': [monthlySummary.income, monthlySummary.expense],
       };
     });
   }
@@ -57,8 +53,8 @@ class _MyBarGraphState extends State<MyBarGraph> {
 
     List<double> amounts = [];
 
-    for (final map in widget.monthlySummary) {
-      amounts.addAll([map[_incomesKey], map[_expensesKey]]);
+    for (final summary in widget.monthlySummary) {
+      amounts.addAll([summary.income, summary.expense]);
     }
 
     amounts.sort();
