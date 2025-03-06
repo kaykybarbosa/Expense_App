@@ -23,7 +23,10 @@ dependencies:
   # Provider
   provider: ^6.1.2
   path_provider: ^2.1.5
+
+  # Paths
   path: ^1.9.1
+  external_path: ^2.2.0
 
   # Intl
   intl: ^0.20.1
